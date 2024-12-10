@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { User } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@prisma/client"; // Import Prisma namespace
 
 export async function GET() {
   const users = await prisma.user.findMany({});
@@ -10,7 +10,7 @@ export async function GET() {
       verificationToken: _verificationToken,
       passwordResetToken: _passwordResetToken,
       ...rest
-    }: User) => rest
+    }: Prisma.UserGetPayload<object>) => rest
   );
 
   return NextResponse.json(

@@ -1,6 +1,5 @@
 import { UserWithRestaurant } from "@/types/prisma";
-import { User } from "@prisma/client";
-import { NextApiRequest } from "next";
+import { Prisma } from "@prisma/client";
 import { getToken } from "next-auth/jwt";
 import { NextResponse, NextRequest } from "next/server";
 import fetch from "node-fetch";
@@ -59,10 +58,13 @@ export async function getCoordinatesFromAddress(
 }
 
 export async function getUser<IncludeRestaurant extends boolean = false>(
-  req: NextRequest | NextApiRequest,
+  req: NextRequest,
   includeRestaurant: IncludeRestaurant = false as IncludeRestaurant
 ): Promise<
-  (IncludeRestaurant extends true ? UserWithRestaurant : User) | NextResponse
+  | (IncludeRestaurant extends true
+      ? UserWithRestaurant
+      : Prisma.UserGetPayload<object>)
+  | NextResponse
 > {
   if (process.env.NEXTAUTH_SECRET === undefined) {
     console.error("NEXTAUTH_SECRET is not set");
@@ -93,5 +95,7 @@ export async function getUser<IncludeRestaurant extends boolean = false>(
     );
   }
 
-  return user as IncludeRestaurant extends true ? UserWithRestaurant : User;
+  return user as IncludeRestaurant extends true
+    ? UserWithRestaurant
+    : Prisma.UserGetPayload<object>;
 }
