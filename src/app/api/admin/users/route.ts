@@ -10,7 +10,7 @@ export async function GET() {
       verificationToken: _verificationToken,
       passwordResetToken: _passwordResetToken,
       ...rest
-    }: Prisma.UserGetPayload<object>) => rest
+    }: Prisma.UserGetPayload<{}>) => rest
   );
 
   return NextResponse.json(

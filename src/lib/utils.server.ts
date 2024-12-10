@@ -63,7 +63,7 @@ export async function getUser<IncludeRestaurant extends boolean = false>(
 ): Promise<
   | (IncludeRestaurant extends true
       ? UserWithRestaurant
-      : Prisma.UserGetPayload<object>)
+      : Prisma.UserGetPayload<{}>)
   | NextResponse
 > {
   if (process.env.NEXTAUTH_SECRET === undefined) {
@@ -97,5 +97,5 @@ export async function getUser<IncludeRestaurant extends boolean = false>(
 
   return user as IncludeRestaurant extends true
     ? UserWithRestaurant
-    : Prisma.UserGetPayload<object>;
+    : Prisma.UserGetPayload<{}>;
 }
