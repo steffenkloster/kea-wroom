@@ -1,0 +1,112 @@
+// npx prisma generate
+// npx prisma db push
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                  String       @id @default(auto()) @map("_id") @db.ObjectId
+  email               String       @unique
+  password            String
+  firstName           String
+  lastName            String
+  phone               String
+  role                Role
+  address             String?
+  city                String?
+  zipCode             String?
+  verificationToken   String?
+  passwordResetToken  String?
+  isVerified          Boolean      @default(false)
+  isDeleted           Boolean      @default(false)
+  isBlocked           Boolean      @default(false)
+  restaurant          Restaurant?  @relation("UserRestaurant")
+  orders              Order[]      @relation("CustomerOrders")
+  deliveries          Order[]      @relation("CourierDeliveries")
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
+}
+
+model Restaurant {
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String?
+  address     String
+  city        String
+  zipCode     String
+  latitude    Float
+  longitude   Float
+  owner       User?        @relation("UserRestaurant", fields: [ownerId], references: [id])
+  ownerId     String?      @unique @db.ObjectId
+  items       Item[]
+  orders      Order[]      @relation("RestaurantOrders")
+  isBlocked   Boolean      @default(false)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+
+model Item {
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String
+  price       Float
+  images      String[]
+  restaurant  Restaurant   @relation(fields: [restaurantId], references: [id])
+  restaurantId String      @db.ObjectId
+  orderItems  OrderItem[]
+  isBlocked   Boolean      @default(false)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model Order {
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  customer    User         @relation("CustomerOrders", fields: [customerId], references: [id])
+  customerId  String       @db.ObjectId
+  restaurant  Restaurant   @relation("RestaurantOrders", fields: [restaurantId], references: [id])
+  restaurantId String      @db.ObjectId
+  items       OrderItem[]
+  totalPrice  Float
+  status      OrderStatus  @default(PENDING)
+  courier     User?        @relation("CourierDeliveries", fields: [courierId], references: [id])
+  courierId   String?      @db.ObjectId
+  pickupTime  DateTime?
+  deliveryTime DateTime?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model OrderItem {
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  order       Order        @relation(fields: [orderId], references: [id])
+  orderId     String       @db.ObjectId
+  item        Item         @relation(fields: [itemId], references: [id])
+  itemId      String       @db.ObjectId
+  quantity    Int
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+enum Role {
+  CUSTOMER
+  PARTNER
+  RESTAURANT
+  ADMIN
+}
+
+enum OrderStatus {
+  PENDING
+  ACCEPTED
+  PREPARING
+  READY_FOR_PICKUP
+  IN_TRANSIT
+  COMPLETED
+  CANCELED
+}

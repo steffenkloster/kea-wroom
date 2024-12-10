@@ -38,3 +38,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+importRestaurants.ts
+importUsers.js
+mockUsers.json
+mockRestaurants.json
+public/uploads
