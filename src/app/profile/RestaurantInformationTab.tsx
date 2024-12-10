@@ -39,7 +39,7 @@ const formSchema = z.object({
 });
 
 const RestaurantInformationTab = () => {
-  const [loading, _] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const { isLoading, data } = useQuery({
     queryKey: ["repoData"],
@@ -75,6 +75,7 @@ const RestaurantInformationTab = () => {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
+    setLoading(true);
     // await updateOwnUser(values, {
     //   setLoading,
     //   onSuccess: () => {
