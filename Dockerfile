@@ -11,7 +11,9 @@ COPY package.json package-lock.json ./
 RUN npm install
 
 # Copy the rest of the application code
+COPY prisma ./prisma
 COPY . .
+RUN npx prisma generate
 
 # Build the application
 RUN npm run build
