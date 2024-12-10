@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 export async function GET(_: never, { params }: { params: { id: string } }) {
   const { id } = await params;

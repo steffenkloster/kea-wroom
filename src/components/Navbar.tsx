@@ -6,7 +6,6 @@ import Image from "next/image";
 import { useSessionContext } from "../providers/SessionProvider";
 import { logoutUser } from "@/lib/api";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 
 export const Navbar = () => {
   const session = useSessionContext();

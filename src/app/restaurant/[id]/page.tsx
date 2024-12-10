@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { getRestaurant, userPlaceOrder } from "@/lib/api";
 import { ItemDTO, RestaurantDTO } from "@/types";
 import { useQuery } from "@tanstack/react-query";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useState, useMemo } from "react";
 import { toast } from "sonner";
 
