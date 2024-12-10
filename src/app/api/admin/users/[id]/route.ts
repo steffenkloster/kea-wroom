@@ -1,6 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getUser } from "@/lib/utils.server";
-import { User } from "@prisma/client";
 
 export async function GET(
   req: NextRequest,
@@ -16,7 +14,7 @@ export async function GET(
     return NextResponse.json({ message: "User not found" }, { status: 404 });
   }
 
-  const { password, ...sanitizedUser } = user;
+  const { password: _, ...sanitizedUser } = user;
 
   return NextResponse.json(
     { message: "Retrieved user successfully", data: sanitizedUser },

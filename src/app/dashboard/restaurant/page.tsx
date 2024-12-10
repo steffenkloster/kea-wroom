@@ -1,7 +1,5 @@
 import { DashboardGrid, DashboardCard } from "@/components/DashboardGrid";
 import { Section } from "@/components/Section";
-import { buttonVariants } from "@/components/ui/button";
-import Link from "next/link";
 
 const RestaurantDashboardPage = () => {
   return (

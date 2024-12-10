@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getUser } from "@/lib/utils.server";
-import { Item, Restaurant } from "@prisma/client";
 import { ItemDTO, RestaurantDTO } from "@/types";
 
 export async function GET(req: NextRequest) {

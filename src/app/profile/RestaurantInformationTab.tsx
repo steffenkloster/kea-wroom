@@ -13,10 +13,9 @@ import {
   FormMessage
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { getOwnUser, updateOwnUser } from "@/lib/api";
+import { getOwnUser } from "@/lib/api";
 import { Sync } from "@mui/icons-material";
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
 import { UserDTO } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 
@@ -40,7 +39,7 @@ const formSchema = z.object({
 });
 
 const RestaurantInformationTab = () => {
-  const [loading, setLoading] = useState(false);
+  const [loading, _] = useState(false);
 
   const { isLoading, data } = useQuery({
     queryKey: ["repoData"],
@@ -75,6 +74,7 @@ const RestaurantInformationTab = () => {
   }, [data, reset]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log(values);
     // await updateOwnUser(values, {
     //   setLoading,
     //   onSuccess: () => {

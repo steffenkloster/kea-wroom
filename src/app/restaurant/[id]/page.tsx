@@ -11,7 +11,6 @@ import { toast } from "sonner";
 const RestaurantPage = () => {
   const pathname = usePathname();
   const id = pathname?.split("/").pop();
-  const router = useRouter();
 
   const { isLoading, data } = useQuery({
     queryKey: [`getRestaurant-${id}`],

@@ -1,7 +1,6 @@
 import { Section } from "@/components/Section";
-import { buttonVariants, Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import UsersGrid from "./UsersGrid";
-import Link from "next/link";
 
 const AdminUsersPage = () => {
   return (

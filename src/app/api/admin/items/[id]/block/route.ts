@@ -1,6 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getUser } from "@/lib/utils.server";
-import { User } from "@prisma/client";
 import sendMail from "@/lib/mail";
 
 export async function PATCH(
