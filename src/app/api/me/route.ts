@@ -1,7 +1,7 @@
-import { UserDTO } from "@/types";
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
+import { prisma } from "@/lib/prisma";
 
 export async function GET(req: NextRequest) {
   try {
@@ -13,32 +13,18 @@ export async function GET(req: NextRequest) {
     }
 
     const user = await prisma.user.findUnique({
-      where: { id: token.id }
+      where: { id: token.id },
+      include: { restaurant: true }
     });
 
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    const userDTO: UserDTO = {
-      id: user.id,
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      phone: user.phone,
-      role: user.role,
-      address: user.address,
-      city: user.city,
-      zipCode: user.zipCode,
-      isVerified: user.isVerified,
-      isBlocked: user.isBlocked,
-      restaurant: user.restaurant,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt
-    };
+    const { password: _, ...sanitizedUser } = user;
 
     return NextResponse.json(
-      { message: "User retrieved", data: userDTO },
+      { message: "User retrieved", data: sanitizedUser },
       { status: 200 }
     );
   } catch (error) {

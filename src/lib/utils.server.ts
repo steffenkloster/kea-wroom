@@ -4,6 +4,7 @@ import { NextApiRequest } from "next";
 import { getToken } from "next-auth/jwt";
 import { NextResponse, NextRequest } from "next/server";
 import fetch from "node-fetch";
+import { prisma } from "@/lib/prisma";
 
 interface GeocodingResult {
   results: Array<{

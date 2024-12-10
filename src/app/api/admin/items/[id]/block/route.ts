@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import sendMail from "@/lib/mail";
+import { prisma } from "@/lib/prisma";
 
 export async function PATCH({ params }: { params: { id: string } }) {
   const { id } = await params;
@@ -15,7 +16,7 @@ export async function PATCH({ params }: { params: { id: string } }) {
   }
 
   const user = await prisma.user.findUnique({
-    where: { id: item.restaurant.ownerId }
+    where: { id: item.restaurant.ownerId || "" }
   });
 
   if (!user) {

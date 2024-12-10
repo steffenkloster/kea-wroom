@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 
 export async function GET(_: never, { params }: { params: { id: string } }) {
   const { id } = await params;

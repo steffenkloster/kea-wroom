@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import { generateRandomString } from "@/lib/utils";
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 
 export async function POST(req: NextRequest) {
   const { email } = await req.json();

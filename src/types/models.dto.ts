@@ -36,7 +36,7 @@ export interface RestaurantDTO {
   isBlocked: boolean;
   createdAt: Date;
   updatedAt: Date;
-  owner: UserDTO;
+  owner?: UserDTO;
   items: ItemDTO[];
 }
 
