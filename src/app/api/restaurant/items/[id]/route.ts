@@ -204,6 +204,3 @@ export async function PUT(
     );
   }
 }
-function uuidv4() {
-  throw new Error("Function not implemented.");
-}
