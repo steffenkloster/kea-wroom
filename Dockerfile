@@ -1,30 +1,32 @@
-# Start from the base Node.js image
+# Use Node.js image
 FROM node:20-alpine AS builder
 
 # Set working directory
 WORKDIR /app
 
-# Copy package.json and install dependencies
+# Copy package files and install dependencies
 COPY package.json package-lock.json ./
 RUN npm install
+RUN npm install bcrypt
 
-# Copy Prisma schema and source code
-COPY prisma ./prisma
+# Copy the prisma directory and other necessary files
 COPY . .
+COPY prisma ./prisma
 
-# Generate Prisma client and build the app
-RUN npx prisma generate --schema=./prisma/schema.prisma
+# Generate Prisma Client
+RUN ls -la /app/prisma
+RUN npx prisma generate --schema=/app/prisma/schema.prisma
+
+# Build the application
 RUN npm run build
 
-# Use lightweight Node.js image for production
+# Use a lightweight image for production
 FROM node:20-alpine AS runner
-
-# Set working directory
 WORKDIR /app
 
-# Copy build output and dependencies
+# Copy built files and node_modules
 COPY --from=builder /app ./
 
-# Expose the port and start the app
+# Expose the port and start the application
 EXPOSE 3000
-CMD ["npm", "start"]
+CMD ["npm", "run", "start"]
