@@ -1,6 +1,16 @@
 # Use Node.js image
 FROM node:20-alpine AS builder
 
+# Declare build arguments and environment variables
+ARG DATABASE_URL
+ENV DATABASE_URL=${DATABASE_URL}
+
+ARG NEXTAUTH_SECRET
+ENV NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+
+ARG NEXTAUTH_URL
+ENV NEXTAUTH_URL=${NEXTAUTH_URL}
+
 # Set working directory
 WORKDIR /app
 
