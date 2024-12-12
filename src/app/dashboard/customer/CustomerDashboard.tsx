@@ -77,7 +77,10 @@ const CustomerDashboard = () => {
     return filteredRestaurants.map((restaurant) => {
       return {
         lat: restaurant.latitude,
-        lng: restaurant.longitude
+        lng: restaurant.longitude,
+        title: restaurant.name,
+        description: restaurant.description || "",
+        id: restaurant.id
       };
     });
   }, [filteredRestaurants]);

@@ -181,3 +181,7 @@ h3 {
 h4 {
   @apply text-base md:text-lg lg:text-xl;
 }
+
+.gm-style-iw-ch {
+  @apply text-xl font-medium text-black;
+}
