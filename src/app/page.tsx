@@ -5,6 +5,7 @@ import { AddressAutocompleteInput } from "@/components/ui/address-input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   const handlePlaceSelected = (place: google.maps.places.PlaceResult) => {
@@ -75,9 +76,9 @@ export default function Home() {
               to earn extra income, Wroom has you covered. Start your journey as
               a courier and make a difference in your city.
             </p>
-            <button className="px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-              Join as a Courier
-            </button>
+            <Button variant={"default"} asChild>
+              <Link href="/signup/partner">Become a courier</Link>
+            </Button>
           </div>
         </div>
       </Section>
@@ -100,9 +101,9 @@ export default function Home() {
               sales, and delight more customers every day. Sign up now and take
               your restaurant to the next level with Wroom!
             </p>
-            <button className="px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-              Join as a Restaurant
-            </button>
+            <Button variant={"default"} asChild>
+              <Link href="/signup/restaurant">Partner with Wroom</Link>
+            </Button>
           </div>
 
           <div className="relative w-full rounded-lg overflow-hidden">
