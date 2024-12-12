@@ -1,5 +1,5 @@
 import { Section } from "@/components/Section";
-import EditItemForm from "./EditItemForm";
+import OrdersGrid from "./OrdersGrid";
 
 import {
   Breadcrumb,
@@ -11,11 +11,11 @@ import {
 } from "@/components/ui/breadcrumb";
 
 export const metadata = {
-  title: "Edit Item - Restaurant Dashboard - Wroom",
-  description: "Edit information about a specific item in your restaurant."
+  title: "Orders - Restaurant Dashboard - Wroom",
+  description: "View and manage the orders for your restaurant."
 };
 
-const EditItemPage = () => {
+const RestaurantOrdersPage = () => {
   return (
     <Section>
       <Breadcrumb className="mb-3">
@@ -27,23 +27,21 @@ const EditItemPage = () => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href="/dashboard/restaurant/items">
-              Items
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>Edit item</BreadcrumbPage>
+            <BreadcrumbPage>Orders</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
 
-      <header>
-        <h1>Edit item</h1>
+      <header className="flex justify-between">
+        <div>
+          <h1>Restaurant Orders</h1>
+          <p>View and manage the orders for your restaurant.</p>
+        </div>
       </header>
-      <EditItemForm />
+
+      <OrdersGrid />
     </Section>
   );
 };
 
-export default EditItemPage;
+export default RestaurantOrdersPage;

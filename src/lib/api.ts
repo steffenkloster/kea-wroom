@@ -271,6 +271,31 @@ export const resendVerificationCode = async (
   return result;
 };
 
+export const getOwnRestaurant = async (
+  handlers: ApiHandlers = {}
+): Promise<ApiResponse<RestaurantDTO> | null> => {
+  const {
+    setLoading = () => {},
+    onError = defaultOnError,
+    onSuccess = (data) => console.log("Success:", data),
+    finallyCallback
+  } = handlers;
+  const result = await apiRequest<ApiResponse<RestaurantDTO>>(
+    "/api/users/restaurant",
+    {
+      method: "GET"
+    },
+    (data) => {
+      onSuccess(data);
+      return data;
+    },
+    onError,
+    setLoading,
+    finallyCallback
+  );
+  return result;
+};
+
 export const getOwnUser = async (
   handlers: ApiHandlers = {}
 ): Promise<ApiResponse<UserDTO> | null> => {
@@ -637,6 +662,72 @@ export const updateItem = async (
     {
       method: "PUT",
       body: formData
+    },
+    (data) => {
+      onSuccess(data);
+      return data;
+    },
+    onError,
+    setLoading,
+    finallyCallback
+  );
+
+  return result;
+};
+
+export const updateRestaurant = async (
+  restaurantId: string,
+  restaurantData: {
+    name: string;
+    description?: string;
+    address: string;
+    city: string;
+    zipCode: string;
+  },
+  handlers: ApiHandlers = {}
+): Promise<ApiResponse<RestaurantDTO> | null> => {
+  const {
+    setLoading = () => {},
+    onError = defaultOnError,
+    onSuccess = (data) => console.log("Success:", data),
+    finallyCallback
+  } = handlers;
+
+  const result = await apiRequest<ApiResponse<RestaurantDTO>>(
+    `/api/restaurant/${restaurantId}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(restaurantData)
+    },
+    (data) => {
+      onSuccess(data);
+      return data;
+    },
+    onError,
+    setLoading,
+    finallyCallback
+  );
+
+  return result;
+};
+
+export const getOrders = async (
+  handlers: ApiHandlers = {}
+): Promise<ApiResponse<OrderDTO[]> | null> => {
+  const {
+    setLoading = () => {},
+    onError = defaultOnError,
+    onSuccess = (data) => console.log("Success:", data),
+    finallyCallback
+  } = handlers;
+
+  const result = await apiRequest<ApiResponse<OrderDTO[]>>(
+    "/api/restaurant/orders",
+    {
+      method: "GET"
     },
     (data) => {
       onSuccess(data);

@@ -3,6 +3,15 @@ import { buttonVariants } from "@/components/ui/button";
 import ItemsGrid from "./ItemsGrid";
 import Link from "next/link";
 
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator
+} from "@/components/ui/breadcrumb";
+
 export const metadata = {
   title: "Items - Restaurant Dashboard - Wroom",
   description:
@@ -12,6 +21,20 @@ export const metadata = {
 const RestaurantItemsPage = () => {
   return (
     <Section>
+      <Breadcrumb className="mb-3">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/dashboard/restaurant">
+              Dashboard
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>Items</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+
       <header className="flex justify-between">
         <div>
           <h1>Restaurant Items</h1>

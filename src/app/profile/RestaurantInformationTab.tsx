@@ -13,22 +13,19 @@ import {
   FormMessage
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { getOwnUser } from "@/lib/api";
+import { getOwnRestaurant, updateRestaurant } from "@/lib/api";
 import { Sync } from "@mui/icons-material";
 import { useEffect, useState } from "react";
-import { UserDTO } from "@/types";
+import { RestaurantDTO } from "@/types";
 import { useQuery } from "@tanstack/react-query";
+import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
 
 const formSchema = z.object({
-  firstName: z.string().min(2, {
-    message: "First name must be at least 2 characters."
+  name: z.string().min(2, {
+    message: "Restaurant name must be at least 2 characters."
   }),
-  lastName: z.string().min(2, {
-    message: "Last name must be at least 2 characters."
-  }),
-  phone: z
-    .string()
-    .min(8, { message: "Phone number must be at least 8 characters." }),
+  description: z.string(),
   address: z
     .string()
     .min(2, { message: "Address must be at least 2 characters." }),
@@ -42,11 +39,11 @@ const RestaurantInformationTab = () => {
   const [loading, setLoading] = useState(false);
 
   const { isLoading, data } = useQuery({
-    queryKey: ["repoData"],
-    queryFn: async (): Promise<UserDTO | null> => {
-      const response = await getOwnUser();
+    queryKey: ["restaurantInformation"],
+    queryFn: async (): Promise<RestaurantDTO | null> => {
+      const response = await getOwnRestaurant();
       if (response) {
-        return response.data as UserDTO;
+        return response.data as RestaurantDTO;
       }
 
       return null;
@@ -56,9 +53,8 @@ const RestaurantInformationTab = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
-      phone: "",
+      name: "",
+      description: "",
       address: "",
       city: "",
       zipCode: ""
@@ -69,19 +65,26 @@ const RestaurantInformationTab = () => {
 
   useEffect(() => {
     if (data) {
-      reset(data);
+      reset({
+        name: data.name,
+        description: data.description || "",
+        address: data.address,
+        city: data.city,
+        zipCode: data.zipCode
+      });
     }
   }, [data, reset]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    if (!data?.id) return;
+
     setLoading(true);
-    // await updateOwnUser(values, {
-    //   setLoading,
-    //   onSuccess: () => {
-    //     toast.success("Personal information updated successfully.");
-    //   }
-    // });
+    await updateRestaurant(data.id, values, {
+      setLoading,
+      onSuccess: () => {
+        toast.success("Restaurant information updated successfully.");
+      }
+    });
   }
 
   return isLoading ? (
@@ -89,54 +92,34 @@ const RestaurantInformationTab = () => {
   ) : (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
-        <div className="grid grid-cols-2 gap-3">
-          <FormField
-            control={form.control}
-            name="firstName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>First name</FormLabel>
-                <FormControl>
-                  <Input
-                    autoComplete="given-name"
-                    placeholder="John"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="lastName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Last name</FormLabel>
-                <FormControl>
-                  <Input
-                    autoComplete="family-name"
-                    placeholder="Doe"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Restaurant name</FormLabel>
+              <FormControl>
+                <Input
+                  autoComplete="off"
+                  placeholder="My Restaurant"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <FormField
           control={form.control}
-          name="phone"
+          name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Phone number</FormLabel>
+              <FormLabel>Restaurant name</FormLabel>
               <FormControl>
-                <Input
-                  autoComplete="tel"
-                  placeholder="20 20 20 20"
+                <Textarea
+                  className="bg-white"
+                  placeholder="A nice description about your restaurant"
                   {...field}
                 />
               </FormControl>
@@ -207,7 +190,7 @@ const RestaurantInformationTab = () => {
           {loading ? (
             <Sync className="animate-spin" />
           ) : (
-            "Update personal information"
+            "Update restaurant information"
           )}
         </Button>
       </form>

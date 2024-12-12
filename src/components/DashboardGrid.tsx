@@ -16,7 +16,7 @@ import {
 
 import { Delete } from "@mui/icons-material";
 import { cn } from "@/lib/utils";
-import { ItemDTO, UserDTO } from "@/types";
+import { ItemDTO, OrderDTO, UserDTO } from "@/types";
 
 // DashboardGrid component
 export const DashboardGrid = ({ children }: { children?: ReactNode }) => {
@@ -127,6 +127,27 @@ export const ItemCard = ({
           className={cn(buttonVariants({ variant: "default" }), "w-full")}
         >
           Edit item
+        </Link>
+      </div>
+    </article>
+  );
+};
+
+export const OrderCard = ({ order }: { order: OrderDTO }) => {
+  return (
+    <article className="bg-white p-6 rounded-lg shadow">
+      <header>
+        <h2 className="text-xl font-semibold">Order #{order.id}</h2>
+      </header>
+      <p>Total price: {order.totalPrice} kr.</p>
+      <p>Order status: {order.status}</p>
+
+      <div className="flex gap-3 mt-3">
+        <Link
+          href={`/dashboard/restaurant/items/${order.id}`}
+          className={cn(buttonVariants({ variant: "default" }), "w-full")}
+        >
+          Manage
         </Link>
       </div>
     </article>

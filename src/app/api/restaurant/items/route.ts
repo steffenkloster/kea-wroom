@@ -115,7 +115,8 @@ export async function GET(req: NextRequest) {
   }
 
   const restaurant = await prisma.restaurant.findUnique({
-    where: { id: restaurantId }
+    where: { id: restaurantId },
+    include: { items: true }
   });
 
   if (!restaurant) {
@@ -132,12 +133,8 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  const items = await prisma.item.findMany({
-    where: { restaurantId }
-  });
-
   return NextResponse.json(
-    { message: "Retrieved items successfully", data: items },
+    { message: "Retrieved items successfully", data: restaurant.items },
     { status: 200 }
   );
 }

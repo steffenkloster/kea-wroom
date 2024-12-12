@@ -5,6 +5,7 @@ import PersonalInformationTab from "./PersonalInformationTab";
 import ChangePasswordTab from "./ChangePasswordTab";
 import SettingsTab from "./SettingsTab";
 import { useSessionContext } from "@/providers/SessionProvider";
+import RestaurantInformationTab from "./RestaurantInformationTab";
 
 const ProfileTabs = () => {
   const session = useSessionContext();
@@ -31,6 +32,10 @@ const ProfileTabs = () => {
         <TabsContent value="account">
           <h2>Personal information</h2>
           <PersonalInformationTab />
+        </TabsContent>
+        <TabsContent value="restaurant">
+          <h2>Restaurant information</h2>
+          <RestaurantInformationTab />
         </TabsContent>
         <TabsContent value="password">
           <h2>Change password</h2>
