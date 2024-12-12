@@ -1,7 +1,9 @@
 import { toast } from "sonner";
 import {
   ApiHandlers,
+  CartItem,
   ItemDTO,
+  OrderDTO,
   RestaurantDTO,
   UserDTO,
   UserTokenDTO
@@ -442,9 +444,9 @@ export const resetPassword = async (
 
 export const userPlaceOrder = async (
   restaurantId: string,
-  items: ItemDTO[],
+  items: CartItem[],
   handlers: ApiHandlers = {}
-): Promise<ApiResponse | null> => {
+): Promise<ApiResponse<OrderDTO> | null> => {
   const {
     setLoading = () => {},
     onError = defaultOnError,
@@ -454,7 +456,7 @@ export const userPlaceOrder = async (
     finallyCallback
   } = handlers;
 
-  const result = await apiRequest<ApiResponse>(
+  const result = await apiRequest<ApiResponse<OrderDTO>>(
     "/api/orders",
     {
       method: "POST",

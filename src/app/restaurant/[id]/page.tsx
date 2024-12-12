@@ -1,4 +1,4 @@
-import { ItemDTO, RestaurantDTO } from "@/types";
+import { RestaurantDTO } from "@/types";
 import RestaurantPageOrder from "./RestaurantPageOrder";
 import { redirect } from "next/navigation";
 import { Metadata } from "next";
@@ -10,8 +10,10 @@ export async function generateMetadata({
 }: {
   params: { id: string };
 }): Promise<Metadata> {
+  const { id } = await params;
+
   const restaurant = await prisma.restaurant.findUnique({
-    where: { id: params.id }
+    where: { id }
   });
 
   if (!restaurant) {

@@ -1,33 +1,81 @@
 "use client";
 import { Section } from "@/components/Section";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { userPlaceOrder } from "@/lib/api";
-import { ItemDTO, RestaurantDTO } from "@/types";
+import { CartItem, RestaurantDTO } from "@/types";
+import { useRouter } from "next/navigation";
 import { useState, useMemo } from "react";
 import { toast } from "sonner";
 
 const RestaurantPageOrder = ({ restaurant }: { restaurant: RestaurantDTO }) => {
-  const addItemToCart = (item: ItemDTO) => {
-    setCartItems((prevItems) => [...prevItems, item]);
-    toast.success(`${item.name} added to cart!`);
-  };
+  const router = useRouter();
 
-  const placeOrder = async () => {
-    await userPlaceOrder(restaurant.id, cartItems, {
-      setLoading,
-      onSuccess: () => {
-        toast.success("Order placed successfully!");
-        setLoading(true);
-        //router.push(`/order/${id}`);
+  const addItemToCart = (itemId: string) => {
+    setCartItems((prevItems) => {
+      const existingItem = prevItems.find(
+        (cartItem) => cartItem.itemId === itemId
+      );
+      if (existingItem) {
+        return prevItems.map((cartItem) =>
+          cartItem.itemId === itemId
+            ? { ...cartItem, quantity: cartItem.quantity + 1 }
+            : cartItem
+        );
       }
+
+      return [...prevItems, { itemId, quantity: 1 }];
     });
   };
 
+  const removeItemFromCart = (itemId: string) => {
+    setCartItems((prevItems) => {
+      const existingItem = prevItems.find(
+        (cartItem) => cartItem.itemId === itemId
+      );
+
+      if (!existingItem) {
+        return prevItems;
+      }
+
+      if (existingItem.quantity === 1) {
+        return prevItems.filter((cartItem) => cartItem.itemId !== itemId);
+      }
+
+      return prevItems.map((cartItem) =>
+        cartItem.itemId === itemId
+          ? { ...cartItem, quantity: cartItem.quantity - 1 }
+          : cartItem
+      );
+    });
+  };
+
+  const placeOrder = async () => {
+    const response = await userPlaceOrder(restaurant.id, cartItems, {
+      setLoading
+    });
+
+    if (!response || !response.data) {
+      return;
+    }
+
+    setLoading(true);
+    toast.success("Order placed successfully!");
+    router.push(`/orders/${response.data.id}`);
+  };
+
   const [loading, setLoading] = useState(false);
-  const [cartItems, setCartItems] = useState<ItemDTO[]>([]);
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+
   const totalAmount = useMemo(() => {
-    return cartItems.reduce((acc, item) => acc + item.price, 0);
-  }, [cartItems]);
+    return cartItems
+      .reduce((acc, item) => {
+        const price =
+          restaurant.items.find((i) => i.id === item.itemId)?.price || 0;
+        return acc + price * item.quantity;
+      }, 0)
+      .toFixed(2);
+  }, [cartItems, restaurant.items]);
 
   return (
     <>
@@ -69,13 +117,62 @@ const RestaurantPageOrder = ({ restaurant }: { restaurant: RestaurantDTO }) => {
                   </div>
 
                   <div>
-                    <Button
-                      disabled={loading}
-                      variant={"default"}
-                      onClick={() => addItemToCart(item)}
-                    >
-                      Add to cart
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button
+                        onClick={() => {
+                          removeItemFromCart(item.id);
+                        }}
+                      >
+                        -
+                      </Button>
+
+                      <Input
+                        type="number"
+                        className="w-16"
+                        value={
+                          cartItems.find(
+                            (cartItem) => cartItem.itemId === item.id
+                          )?.quantity || 0
+                        }
+                        onChange={(e) => {
+                          const value = parseInt(e.target.value, 10);
+                          if (value < 0) return;
+
+                          setCartItems((prevItems) => {
+                            const existingItemIndex = prevItems.findIndex(
+                              (cartItem) => cartItem.itemId === item.id
+                            );
+
+                            if (existingItemIndex !== -1) {
+                              const updatedItems = [...prevItems];
+                              if (value === 0) {
+                                updatedItems.splice(existingItemIndex, 1);
+                              } else {
+                                updatedItems[existingItemIndex].quantity =
+                                  value;
+                              }
+                              return updatedItems;
+                            } else {
+                              if (value > 0) {
+                                return [
+                                  ...prevItems,
+                                  { itemId: item.id, quantity: value }
+                                ];
+                              }
+                              return prevItems;
+                            }
+                          });
+                        }}
+                      />
+
+                      <Button
+                        onClick={() => {
+                          addItemToCart(item.id);
+                        }}
+                      >
+                        +
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </article>
