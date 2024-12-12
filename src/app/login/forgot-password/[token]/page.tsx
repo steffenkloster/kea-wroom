@@ -7,6 +7,11 @@ import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { prisma } from "@/lib/prisma";
 
+export const metadata = {
+  title: "Reset Password - Wroom",
+  description: "Enter a new password to reset your account."
+};
+
 export default async function NewPasswordPage({
   params
 }: {

@@ -2,6 +2,11 @@ import { Section } from "@/components/Section";
 import { Button } from "@/components/ui/button";
 import UsersGrid from "./UsersGrid";
 
+export const metadata = {
+  title: "Users - Admin Dashboard - Wroom",
+  description: "Manage users in the admin dashboard of Wroom."
+};
+
 const AdminUsersPage = () => {
   return (
     <Section>

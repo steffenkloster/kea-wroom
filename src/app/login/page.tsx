@@ -3,6 +3,11 @@ import LoginForm from "./LoginForm";
 import BoxedLayout from "@/components/BoxedLayout";
 import Link from "next/link";
 
+export const metadata = {
+  title: "Login - Wroom",
+  description: "Enter your credentials to log in to your Wroom account."
+};
+
 export default function Signup() {
   return (
     <div className="w-full h-full bg-primary">

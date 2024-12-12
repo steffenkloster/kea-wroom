@@ -1,6 +1,13 @@
 import { Section } from "@/components/Section";
 import SignupForm from "./SignupForm";
 import BoxedLayout from "@/components/BoxedLayout";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Signup - Wroom",
+  description:
+    "Create an account to start ordering meals from local restaurants."
+};
 
 export default function Signup() {
   return (

@@ -3,6 +3,11 @@ import SignupFormRestaurant from "./SignupFormRestaurant";
 import BoxedLayout from "@/components/BoxedLayout";
 import { Role } from "@/types";
 
+export const metadata = {
+  title: "Restaurant Signup - Wroom",
+  description: "Create an account to start selling takeaway meals to customers."
+};
+
 export default function Signup() {
   return (
     <div className="w-full h-full bg-primary">

@@ -2,6 +2,11 @@ import { Section } from "@/components/Section";
 import VerifyForm from "./VerifyForm";
 import BoxedLayout from "@/components/BoxedLayout";
 
+export const metadata = {
+  title: "Verify Your Account - Wroom",
+  description: "Verify your email address to activate your Wroom account."
+};
+
 export default function VerifyPage() {
   return (
     <div className="w-full h-full bg-primary">

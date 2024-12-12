@@ -3,6 +3,11 @@ import { buttonVariants } from "@/components/ui/button";
 import ItemsGrid from "./ItemsGrid";
 import Link from "next/link";
 
+export const metadata = {
+  title: "Items - Admin Dashboard - Wroom",
+  description: "Manage items in the admin dashboard of Wroom."
+};
+
 const RestaurantItemsPage = () => {
   return (
     <Section>
