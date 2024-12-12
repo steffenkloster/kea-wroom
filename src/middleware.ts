@@ -3,8 +3,12 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function middleware(req: NextRequest) {
   const url = req.nextUrl.clone();
+  console.log("Middleware", url.pathname);
+  console.log("NEXTAUTH_SECRET", process.env.NEXTAUTH_SECRET);
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+  console.log("Token", token);
   const isAuthenticated = !!token;
+  console.log("isAuthenticated", isAuthenticated);
 
   if (!isAuthenticated) {
     if (
