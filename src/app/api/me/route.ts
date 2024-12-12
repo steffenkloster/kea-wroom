@@ -5,7 +5,13 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET(req: NextRequest) {
   try {
-    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+    const token = await getToken({
+      req,
+      secret: process.env.NEXTAUTH_SECRET,
+      cookieName: "next-auth.session-token",
+      secureCookie: process.env.NODE_ENV === "production"
+    });
+
     const isAuthenticated = !!token;
 
     if (!isAuthenticated) {
@@ -38,7 +44,13 @@ export async function GET(req: NextRequest) {
 
 export async function PATCH(req: NextRequest) {
   try {
-    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+    const token = await getToken({
+      req,
+      secret: process.env.NEXTAUTH_SECRET,
+      cookieName: "next-auth.session-token",
+      secureCookie: process.env.NODE_ENV === "production"
+    });
+
     const isAuthenticated = !!token;
 
     if (!isAuthenticated) {
@@ -101,7 +113,13 @@ export async function PATCH(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   try {
-    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+    const token = await getToken({
+      req,
+      secret: process.env.NEXTAUTH_SECRET,
+      cookieName: "next-auth.session-token",
+      secureCookie: process.env.NODE_ENV === "production"
+    });
+
     const isAuthenticated = !!token;
 
     if (!isAuthenticated) {

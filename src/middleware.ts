@@ -1,32 +1,8 @@
-import { getToken, decode } from "next-auth/jwt";
+import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function middleware(req: NextRequest) {
   const url = req.nextUrl.clone();
-  const sessionToken = req.cookies.get("next-auth.session-token")?.value;
-
-  console.log("Middleware Path:", url.pathname);
-  console.log("Session Token:", sessionToken);
-
-  // Check if the token exists in cookies
-  if (!sessionToken) {
-    console.log("No session token found in cookies.");
-  } else {
-    try {
-      const decodedToken = await decode({
-        token: sessionToken,
-        secret: process.env.NEXTAUTH_SECRET as string
-      });
-
-      console.log("Decoded Token:", decodedToken);
-    } catch (error) {
-      if (error instanceof Error) {
-        console.log("Error decoding token:", error.message);
-      } else {
-        console.log("Unexpected error:", error);
-      }
-    }
-  }
 
   const token = await getToken({
     req,
@@ -35,10 +11,7 @@ export async function middleware(req: NextRequest) {
     secureCookie: process.env.NODE_ENV === "production"
   });
 
-  console.log("Token from getToken:", token);
-
   const isAuthenticated = !!token;
-  console.log("isAuthenticated", isAuthenticated);
 
   if (!isAuthenticated) {
     if (

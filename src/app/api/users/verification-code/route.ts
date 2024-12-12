@@ -6,7 +6,9 @@ import { prisma } from "@/lib/prisma";
 export async function POST(req: NextRequest) {
   const token = await getToken({
     req,
-    secret: process.env.NEXTAUTH_SECRET
+    secret: process.env.NEXTAUTH_SECRET,
+    cookieName: "next-auth.session-token",
+    secureCookie: process.env.NODE_ENV === "production"
   });
 
   if (!token) {
