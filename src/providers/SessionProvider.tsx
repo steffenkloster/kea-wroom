@@ -1,9 +1,9 @@
 "use client";
 
 import React, { createContext, useContext } from "react";
-import { Session } from "next-auth";
+import { JWT } from "next-auth/jwt";
 
-const SessionContext = createContext<Session | null>(null);
+const SessionContext = createContext<JWT | null>(null);
 
 export const useSessionContext = () => {
   return useContext(SessionContext);
@@ -14,7 +14,7 @@ export const SessionProvider = ({
   session
 }: {
   children: React.ReactNode;
-  session: Session | null;
+  session: JWT | null;
 }) => {
   return (
     <SessionContext.Provider value={session}>

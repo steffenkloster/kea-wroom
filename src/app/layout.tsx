@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
-import { getServerSession } from "next-auth";
+import { cookies } from "next/headers";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { Toaster } from "sonner";
 import SessionProvider from "@/providers/SessionProvider";
 import ReactQueryProvider from "@/providers/ReactQueryProvider";
+import { decode, JWT } from "next-auth/jwt";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -30,14 +31,22 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await getServerSession(authOptions);
+  const cookieStore = await cookies();
+  const token = cookieStore.get("next-auth.session-token")?.value;
+
+  const decodedToken = token
+    ? await decode({
+        token,
+        secret: process.env.NEXTAUTH_SECRET!
+      })
+    : null;
 
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <SessionProvider session={session}>
+        <SessionProvider session={decodedToken}>
           <ReactQueryProvider>
             <Navbar />
             <main>{children}</main>

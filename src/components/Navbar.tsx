@@ -14,7 +14,7 @@ export const Navbar = () => {
     await logoutUser();
 
     toast.success("You have been logged out.");
-    window.location.reload();
+    window.location.replace("/");
   };
 
   const renderButtons = () => {
@@ -31,7 +31,7 @@ export const Navbar = () => {
             Profile
           </Link>
           <Link
-            href={`/dashboard/${session.user.role.toLowerCase()}`}
+            href={`/dashboard/${session.role.toLowerCase()}`}
             className={buttonVariants({ variant: "default" })}
           >
             Dashboard
