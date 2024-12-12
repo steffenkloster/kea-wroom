@@ -15,7 +15,7 @@ const ProfileTabs = () => {
         <TabsTrigger className="text-xl" value="account">
           Personal Information
         </TabsTrigger>
-        {session?.user.role === "RESTAURANT" && (
+        {session?.role === "RESTAURANT" && (
           <TabsTrigger className="text-xl" value="restaurant">
             Restaurant Information
           </TabsTrigger>

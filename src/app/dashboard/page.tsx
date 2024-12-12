@@ -1,10 +1,12 @@
-import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import { authOptions } from "../api/auth/[...nextauth]/route";
+import { NextRequest, NextResponse } from "next/server";
+import { getUser } from "@/lib/utils.server";
 
-export default async function RedirectPage() {
-  const session = await getServerSession(authOptions);
-  if (!session) return redirect("/login");
+export default async function RedirectPage(req: NextRequest) {
+  const user = await getUser(req);
+  if (user instanceof NextResponse) {
+    return redirect("/login");
+  }
 
-  redirect(`/dashboard/${session.user.role.toLowerCase()}`);
+  redirect(`/dashboard/${user.role.toLowerCase()}`);
 }
