@@ -8,6 +8,7 @@ import { Toaster } from "sonner";
 import SessionProvider from "@/providers/SessionProvider";
 import ReactQueryProvider from "@/providers/ReactQueryProvider";
 import { decode, JWT } from "next-auth/jwt";
+import Head from "next/head";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -23,7 +24,11 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   title: "Wroom - Fast, fresh, delicious, Wroomed straight to your door",
   description:
-    "Wroom is a food delivery service that connects you with local restaurants to deliver fresh, delicious meals straight to your door."
+    "Wroom is a food delivery service that connects you with local restaurants to deliver fresh, delicious meals straight to your door.",
+  icons: {
+    icon: "/favicon-32x32.png",
+    apple: "/apple-touch-icon.png"
+  }
 };
 
 export default async function RootLayout({
