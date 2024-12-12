@@ -4,6 +4,8 @@ import { NextRequest, NextResponse } from "next/server";
 export async function middleware(req: NextRequest) {
   const url = req.nextUrl.clone();
   console.log("Middleware", url.pathname);
+  console.log("Cookies in middleware:", req.cookies);
+  console.log("Host:", req.headers.get("host"));
   console.log("NEXTAUTH_SECRET", process.env.NEXTAUTH_SECRET);
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
   console.log("Token", token);
