@@ -11,6 +11,8 @@ declare module "next-auth" {
     email: string;
     role: string;
     isVerified: boolean;
+    isBlocked: boolean;
+    isDeleted: boolean;
     firstName: string;
     lastName: string;
   }
@@ -22,6 +24,8 @@ declare module "next-auth/jwt" {
     email: string;
     role: string;
     isVerified: boolean;
+    isBlocked: boolean;
+    isDeleted: boolean;
     firstName: string;
     lastName: string;
   }

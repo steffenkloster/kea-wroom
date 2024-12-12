@@ -148,6 +148,8 @@ export async function POST(req: Request) {
           email: newUser.email,
           role: newUser.role,
           isVerified: newUser.isVerified,
+          isBlocked: newUser.isBlocked,
+          isDeleted: newUser.isDeleted,
           firstName: newUser.firstName,
           lastName: newUser.lastName
         },

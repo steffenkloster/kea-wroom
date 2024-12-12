@@ -46,6 +46,8 @@ const authOptions: AuthOptions = {
           email: user.email,
           role: user.role,
           isVerified: user.isVerified,
+          isBlocked: user.isBlocked,
+          isDeleted: user.isDeleted,
           firstName: user.firstName,
           lastName: user.lastName
         };
@@ -60,6 +62,8 @@ const authOptions: AuthOptions = {
           email: token.email,
           role: token.role,
           isVerified: token.isVerified,
+          isBlocked: token.isBlocked,
+          isDeleted: token.isDeleted,
           firstName: token.firstName,
           lastName: token.lastName
         };
@@ -72,6 +76,8 @@ const authOptions: AuthOptions = {
         token.email = user.email;
         token.role = user.role;
         token.isVerified = user.isVerified;
+        token.isBlocked = user.isBlocked;
+        token.isDeleted = user.isDeleted;
         token.firstName = user.firstName;
         token.lastName = user.lastName;
       }
@@ -81,7 +87,8 @@ const authOptions: AuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: "jwt"
-  }
+  },
+  useSecureCookies: process.env.NODE_ENV === "production"
 };
 
 const handler = NextAuth(authOptions);

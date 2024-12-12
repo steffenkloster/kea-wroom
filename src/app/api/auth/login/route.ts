@@ -75,6 +75,8 @@ export async function POST(req: NextRequest) {
         email: user.email,
         role: user.role,
         isVerified: user.isVerified,
+        isBlocked: user.isBlocked,
+        isDeleted: user.isDeleted,
         firstName: user.firstName,
         lastName: user.lastName
       },
