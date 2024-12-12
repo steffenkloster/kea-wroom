@@ -2,6 +2,8 @@ import { ItemDTO, RestaurantDTO } from "@/types";
 import RestaurantPageOrder from "./RestaurantPageOrder";
 import { redirect } from "next/navigation";
 import { Metadata } from "next";
+import { prisma } from "@/lib/prisma";
+import { Item } from "@prisma/client";
 
 export async function generateMetadata({
   params
@@ -54,7 +56,7 @@ const RestaurantPage = async ({ params }: { params: { id: string } }) => {
     address: restaurant.address,
     zipCode: restaurant.zipCode,
     city: restaurant.city,
-    items: restaurant.items.map((item: ItemDTO) => ({
+    items: restaurant.items.map((item: Item) => ({
       id: item.id,
       name: item.name,
       description: item.description,
