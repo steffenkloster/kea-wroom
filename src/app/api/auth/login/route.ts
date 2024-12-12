@@ -65,6 +65,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    console.log("Encoding token");
+    console.log("Secret:", process.env.NEXTAUTH_SECRET);
     const token = await encode({
       token: {
         id: user.id,
@@ -92,6 +94,7 @@ export async function POST(req: NextRequest) {
       { status: 200 }
     );
 
+    console.log("Setting cookie");
     response.cookies.set("next-auth.session-token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
