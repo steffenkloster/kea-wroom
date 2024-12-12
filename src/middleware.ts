@@ -49,7 +49,7 @@ export async function middleware(req: NextRequest) {
 
   if (url.pathname.startsWith("/api/admin")) {
     if (token.role !== "ADMIN") {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
   }
 
