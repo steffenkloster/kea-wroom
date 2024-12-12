@@ -19,7 +19,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Section } from "@/components/Section";
-import { createItem, getItem } from "@/lib/api";
+import { updateItem, getItem } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
 import { ItemDTO } from "@/types";
 
@@ -83,8 +83,10 @@ const EditItemForm = () => {
     }
   }, [data, reset]);
 
-  const onSubmit = async (data: z.infer<typeof FormSchema>) => {
-    await createItem(data, {
+  const onSubmit = async (formData: z.infer<typeof FormSchema>) => {
+    if (!data?.id) return;
+
+    await updateItem(data.id, formData, {
       setLoading,
       onSuccess: () => {
         form.reset();

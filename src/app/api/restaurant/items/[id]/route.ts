@@ -1,9 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
-import path from "path";
-import fs from "fs/promises";
 import { getUser } from "@/lib/utils.server";
 import { prisma } from "@/lib/prisma";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+
+const s3 = new S3Client({
+  region: process.env.AWS_REGION,
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!
+  }
+});
 
 export async function DELETE(
   req: NextRequest,
@@ -171,15 +178,23 @@ export async function PUT(
       );
     }
 
-    const uploadDir = path.join(process.cwd(), "public", "uploads");
-    await fs.mkdir(uploadDir, { recursive: true });
-
+    // Upload images to S3
     const uploadedPaths: string[] = [];
     for (const file of files) {
       const buffer = await file.arrayBuffer();
-      const filePath = path.join(uploadDir, `${uuidv4()}-${file.name}`);
-      await fs.writeFile(filePath, Buffer.from(buffer));
-      uploadedPaths.push(`/uploads/${path.basename(filePath)}`);
+      const key = `uploads/${uuidv4()}-${file.name}`;
+
+      await s3.send(
+        new PutObjectCommand({
+          Bucket: process.env.AWS_S3_BUCKET_NAME!,
+          Key: key,
+          Body: Buffer.from(buffer),
+          ContentType: file.type
+        })
+      );
+
+      const imageUrl = `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
+      uploadedPaths.push(imageUrl);
     }
 
     const updatedItem = await prisma.item.update({
@@ -188,7 +203,7 @@ export async function PUT(
         name,
         description,
         price: parseFloat(price),
-        images: uploadedPaths // existingItem.images
+        images: uploadedPaths // Use uploaded image URLs
       }
     });
 
