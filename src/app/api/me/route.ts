@@ -1,6 +1,7 @@
 import { getUser } from "@/lib/utils.server";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
+import { prisma } from "@/lib/prisma";
 
 interface UpdateData {
   firstName?: string;
