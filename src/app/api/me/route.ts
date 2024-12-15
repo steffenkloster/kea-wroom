@@ -2,6 +2,7 @@ import { getUser } from "@/lib/utils.server";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import { prisma } from "@/lib/prisma";
+import { sanitizeUser } from "@/lib/sanitize";
 
 interface UpdateData {
   firstName?: string;
@@ -17,8 +18,10 @@ export const GET = async (req: NextRequest) => {
   const user = await getUser(req, true);
   if (user instanceof NextResponse) return user;
 
+  const sanitizedUser = sanitizeUser(user);
+
   return NextResponse.json(
-    { message: "Retrieved user successfully", data: user },
+    { message: "Retrieved user successfully", data: sanitizedUser },
     { status: 200 }
   );
 };
@@ -67,8 +70,10 @@ export const PATCH = async (req: NextRequest) => {
     data: body
   });
 
+  const sanitizedUser = sanitizeUser(updatedUser);
+
   return NextResponse.json(
-    { message: "User updated successfully", data: updatedUser },
+    { message: "User updated successfully", data: sanitizedUser },
     { status: 200 }
   );
 };
