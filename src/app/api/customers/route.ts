@@ -1,12 +1,7 @@
 import prisma from "@/lib/prisma";
 import bcrypt from "bcrypt";
 import { NextRequest, NextResponse } from "next/server";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { getServerSession } from "next-auth";
-import { encode } from "next-auth/jwt";
-import sendMail from "@/lib/mail";
-import { Prisma } from "@prisma/client";
-import { getCoordinatesFromAddress, getUser } from "@/lib/utils.server";
+import { getUser } from "@/lib/utils.server";
 import { sanitizeUser } from "@/lib/sanitize";
 
 export async function GET(req: NextRequest) {

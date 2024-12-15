@@ -9,8 +9,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator
 } from "@/components/ui/breadcrumb";
-import { cookies } from "next/headers";
-import { getTokenFromCookies } from "@/lib/utils.server";
 
 export const metadata = {
   title: "Orders - Restaurant Dashboard - Wroom",

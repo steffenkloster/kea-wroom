@@ -3,5 +3,4 @@ export type CartItem = {
   quantity: number;
 };
 
-export * from "./api";
 export * from "./models.dto";

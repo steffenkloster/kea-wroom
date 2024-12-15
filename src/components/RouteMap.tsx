@@ -8,7 +8,7 @@ import {
   DirectionsRenderer
 } from "@react-google-maps/api";
 import { OrderDTO } from "@/types";
-import { getCoordinates } from "@/utils/location";
+import { getCoordinates } from "@/lib/location";
 import { Button } from "./ui/button";
 import {
   DirectionsCarRounded,

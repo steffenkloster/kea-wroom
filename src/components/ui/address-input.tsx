@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { cn } from "@/lib/utils";
 import Autocomplete from "react-google-autocomplete";
-import { handleGetCurrentAddress } from "@/utils/location";
+import { handleGetCurrentAddress } from "@/lib/location";
 import { Button } from "./button";
 import { toast } from "sonner";
 import { NearMe, Sync } from "@mui/icons-material";

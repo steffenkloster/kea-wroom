@@ -18,7 +18,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Section } from "@/components/Section";
 import { createItem } from "@/lib/api/restaurants/createItem";
 
 const MAX_IMAGES = 3;

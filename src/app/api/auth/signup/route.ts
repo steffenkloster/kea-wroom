@@ -6,10 +6,9 @@ import { getServerSession } from "next-auth";
 import { encode } from "next-auth/jwt";
 import sendMail from "@/lib/mail";
 import { Prisma } from "@prisma/client";
-import { getCoordinatesFromAddress, getUser } from "@/lib/utils.server";
-import { sanitizeUser } from "@/lib/sanitize";
+import { getCoordinatesFromAddress } from "@/lib/utils.server";
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 

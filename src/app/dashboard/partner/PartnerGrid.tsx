@@ -7,7 +7,7 @@ import { OrderDTO } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { getAvailableOrders } from "@/lib/api/partners/getAvailableOrders";
-import { getDistance } from "@/utils/location";
+import { getDistance } from "@/lib/location";
 import RouteMap from "@/components/RouteMap";
 import { updateDeliveryStatus } from "@/lib/api/partners/updateDeliveryStatus";
 import { Button } from "@/components/ui/button";
@@ -71,7 +71,7 @@ const PartnerGrid: React.FC<PartnerGridProps> = ({ userId }) => {
     }
   };
 
-  const handleActiveDeliveryButtonClick = async (order: OrderDTO) => {
+  const handleActiveDeliveryButtonClick = async () => {
     if (!activeDelivery) return;
 
     const currentIndex = STATUS_ORDER.indexOf(activeDelivery.status);
@@ -182,7 +182,7 @@ const PartnerGrid: React.FC<PartnerGridProps> = ({ userId }) => {
             <Button
               variant="default"
               className="w-full mb-3"
-              onClick={() => handleActiveDeliveryButtonClick(activeDelivery)}
+              onClick={() => handleActiveDeliveryButtonClick()}
             >
               {getButtonText(activeDelivery.status)}
             </Button>

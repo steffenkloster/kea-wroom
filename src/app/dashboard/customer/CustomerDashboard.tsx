@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { getAllRestaurants } from "@/lib/api/public/getAllRestaurants";
 import { RestaurantDTO } from "@/types";
-import { handleGetCurrentLocation } from "@/utils/location";
+import { handleGetCurrentLocation } from "@/lib/location";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
