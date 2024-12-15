@@ -185,7 +185,7 @@ export const OrderCard = ({
   };
 
   const getItemsOrdered = (items: OrderItemDTO[] | undefined) => {
-    if (!items) return <li>Couldn't get items</li>;
+    if (!items) return <li>Couldn&apos;t get items</li>;
 
     return items.map((orderItem) => (
       <li key={orderItem.id}>

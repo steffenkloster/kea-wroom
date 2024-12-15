@@ -1,5 +1,6 @@
 import { UserDTO, RestaurantDTO } from "@/types/models.dto";
 
+/* eslint-disable  @typescript-eslint/no-explicit-any */
 export function sanitizeUser(user: any): UserDTO {
   return {
     id: user.id,

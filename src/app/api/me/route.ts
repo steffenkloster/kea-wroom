@@ -2,6 +2,16 @@ import { getUser } from "@/lib/utils.server";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 
+interface UpdateData {
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
+  password?: string;
+  address?: string;
+  city?: string;
+  zipCode?: string;
+}
+
 export const GET = async (req: NextRequest) => {
   const user = await getUser(req, true);
   if (user instanceof NextResponse) return user;
@@ -21,7 +31,7 @@ export const PATCH = async (req: NextRequest) => {
     return NextResponse.json({ error: "Missing fields" }, { status: 400 });
   }
 
-  const allowedFields = [
+  const allowedFields: (keyof UpdateData)[] = [
     "firstName",
     "lastName",
     "phone",
@@ -31,14 +41,15 @@ export const PATCH = async (req: NextRequest) => {
     "city",
     "zipCode"
   ];
-  const updateData: { [key: string]: any } = {};
+
+  const updateData: Partial<UpdateData> = {};
 
   for (const key of Object.keys(body)) {
-    if (allowedFields.includes(key)) {
+    if (allowedFields.includes(key as keyof UpdateData)) {
       if (key === "password") {
         updateData[key] = await bcrypt.hash(body[key], 10);
       } else {
-        updateData[key] = body[key];
+        updateData[key as keyof UpdateData] = body[key];
       }
     }
   }

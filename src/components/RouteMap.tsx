@@ -81,7 +81,7 @@ const RouteMap: React.FC<RouteMapProps> = ({
     if (window.google && !travelMode) {
       setTravelMode("BICYCLING");
     }
-  }, [window.google, travelMode]);
+  }, [travelMode]);
 
   const handleDirectionsCallback = useCallback(
     (
