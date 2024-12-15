@@ -16,7 +16,6 @@ import { Input } from "@/components/ui/input";
 import { Sync } from "@mui/icons-material";
 import { toast } from "sonner";
 import { useState } from "react";
-import { deleteOwnUser } from "@/lib/api";
 
 import {
   Dialog,
@@ -27,6 +26,7 @@ import {
   DialogTitle,
   DialogTrigger
 } from "@/components/ui/dialog";
+import { deleteOwnUser } from "@/lib/api/me/deleteOwnUser";
 
 const formSchema = z.object({
   password: z

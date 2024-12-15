@@ -18,10 +18,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Section } from "@/components/Section";
-import { updateItem, getItem } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
 import { ItemDTO } from "@/types";
+import { getItem } from "@/lib/api/restaurants/getItem";
+import { updateItem } from "@/lib/api/restaurants/updateItem";
 
 const MAX_IMAGES = 3;
 

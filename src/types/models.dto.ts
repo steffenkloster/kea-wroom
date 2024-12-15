@@ -19,6 +19,7 @@ export interface UserDTO {
   zipCode?: string;
   isVerified: boolean;
   isBlocked: boolean;
+  isDeleted: boolean;
   createdAt: Date;
   updatedAt: Date;
   restaurant?: RestaurantDTO;
@@ -60,10 +61,10 @@ export interface OrderDTO {
   deliveryTime?: Date;
   createdAt: Date;
   updatedAt: Date;
-  customer: UserDTO;
-  restaurant: RestaurantDTO;
+  customer?: UserDTO;
+  restaurant?: RestaurantDTO;
   courier?: UserDTO;
-  items: OrderItemDTO[];
+  items?: OrderItemDTO[];
 }
 
 export interface OrderItemDTO {
@@ -87,6 +88,7 @@ export enum OrderStatus {
   ACCEPTED = "ACCEPTED",
   PREPARING = "PREPARING",
   READY_FOR_PICKUP = "READY_FOR_PICKUP",
+  WAITING_FOR_PICKUP = "WAITING_FOR_PICKUP",
   IN_TRANSIT = "IN_TRANSIT",
   COMPLETED = "COMPLETED",
   CANCELED = "CANCELED"

@@ -9,6 +9,8 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator
 } from "@/components/ui/breadcrumb";
+import { cookies } from "next/headers";
+import { getTokenFromCookies } from "@/lib/utils.server";
 
 export const metadata = {
   title: "Orders - Restaurant Dashboard - Wroom",
@@ -16,6 +18,23 @@ export const metadata = {
 };
 
 const RestaurantOrdersPage = () => {
+  // const cookieStore = await cookies();
+  // const token = await getTokenFromCookies(cookieStore);
+  // if (!token) {
+  //   return null;
+  // }
+
+  // const user = await prisma.user.findUnique({
+  //   where: { id: token.id },
+  //   include: {
+  //     restaurant: true
+  //   }
+  // });
+
+  // if (!user || !user.restaurant) {
+  //   return null;
+  // }
+
   return (
     <Section>
       <Breadcrumb className="mb-3">

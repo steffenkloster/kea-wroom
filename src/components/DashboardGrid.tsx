@@ -14,14 +14,18 @@ import {
   AlertDialogTrigger
 } from "@/components/ui/alert-dialog";
 
+import { Badge } from "@/components/ui/badge";
+
 import { Delete } from "@mui/icons-material";
 import { cn } from "@/lib/utils";
-import { ItemDTO, OrderDTO, UserDTO } from "@/types";
+import { ItemDTO, OrderDTO, OrderItemDTO, UserDTO } from "@/types";
 
 // DashboardGrid component
 export const DashboardGrid = ({ children }: { children?: ReactNode }) => {
   return (
-    <div className="grid grid-cols-1 gap-4 mt-8 sm:grid-cols-2">{children}</div>
+    <div className="columns-1 gap-4 mt-8 sm:columns-2 [&>article]:break-inside-avoid [&>article]:mb-4">
+      {children}
+    </div>
   );
 };
 
@@ -29,11 +33,13 @@ export const DashboardGrid = ({ children }: { children?: ReactNode }) => {
 export const DashboardCard = ({
   header,
   text,
-  link
+  link,
+  disabled = false
 }: {
   header: string;
   text: string;
   link: string;
+  disabled?: boolean;
 }) => {
   return (
     <article className="bg-white p-6 rounded-lg shadow flex gap-3 justify-between">
@@ -41,9 +47,9 @@ export const DashboardCard = ({
         <h2 className="text-xl font-semibold">{header}</h2>
         <p>{text}</p>
       </div>
-      <Link href={link} className={buttonVariants({ variant: "default" })}>
-        Manage
-      </Link>
+      <Button variant={"default"} asChild disabled={disabled}>
+        <Link href={link}>Manage</Link>
+      </Button>
     </article>
   );
 };
@@ -92,8 +98,11 @@ export const ItemCard = ({
 }) => {
   return (
     <article className="bg-white p-6 rounded-lg shadow">
-      <header>
+      <header className="flex justify-between">
         <h2 className="text-xl font-semibold">{item.name}</h2>
+        <Badge variant={item.isBlocked ? "destructive" : "default"}>
+          {item.isBlocked ? "Blocked" : "Active"}
+        </Badge>
       </header>
       <p>{item.description}</p>
       <p>Price: {item.price} kr.</p>
@@ -101,7 +110,11 @@ export const ItemCard = ({
       <div className="flex gap-3 mt-3">
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button variant="destructive" className="">
+            <Button
+              variant="destructive"
+              className=""
+              disabled={item.isBlocked}
+            >
               <Delete />
             </Button>
           </AlertDialogTrigger>
@@ -122,18 +135,67 @@ export const ItemCard = ({
           </AlertDialogContent>
         </AlertDialog>
 
-        <Link
-          href={`/dashboard/restaurant/items/${item.id}`}
-          className={cn(buttonVariants({ variant: "default" }), "w-full")}
+        <Button
+          asChild
+          variant="default"
+          className="w-full"
+          disabled={item.isBlocked}
         >
-          Edit item
-        </Link>
+          <Link href={`/dashboard/restaurant/items/${item.id}`}>Edit item</Link>
+        </Button>
       </div>
     </article>
   );
 };
 
-export const OrderCard = ({ order }: { order: OrderDTO }) => {
+export const OrderCard = ({
+  order,
+  handleButtonClick,
+  handleCancelOrder,
+  loading = false
+}: {
+  order: OrderDTO;
+  handleButtonClick: (order: OrderDTO) => void;
+  handleCancelOrder: (order: OrderDTO) => void;
+  loading?: boolean;
+}) => {
+  const getButtonProperties = (status: string) => {
+    switch (status) {
+      case "PENDING":
+        return { buttonText: "Accept order", disabled: false };
+      case "ACCEPTED":
+        return { buttonText: "Prepare order", disabled: false };
+      case "PREPARING":
+        return { buttonText: "Order ready for pickup", disabled: false };
+      case "READY_FOR_PICKUP":
+        return { buttonText: "Order is waiting for courier", disabled: true };
+      case "IN_TRANSIT":
+        return { buttonText: "Order is being delivered", disabled: true };
+      case "DELIVERED":
+        return { buttonText: "Order delivered", disabled: true };
+      case "CANCELED":
+        return { buttonText: "Order cancelled", disabled: true };
+      default:
+        return { buttonText: "Unknown", disabled: true };
+    }
+  };
+
+  const canCancelOrder = (status: string) => {
+    return !["CANCELED", "DELIVERED", "IN_TRANSIT"].includes(status);
+  };
+
+  const getItemsOrdered = (items: OrderItemDTO[] | undefined) => {
+    if (!items) return <li>Couldn't get items</li>;
+
+    return items.map((orderItem) => (
+      <li key={orderItem.id}>
+        {orderItem.quantity} x {orderItem.item.name}
+      </li>
+    ));
+  };
+
+  const { buttonText, disabled } = getButtonProperties(order.status);
+
   return (
     <article className="bg-white p-6 rounded-lg shadow">
       <header>
@@ -142,13 +204,99 @@ export const OrderCard = ({ order }: { order: OrderDTO }) => {
       <p>Total price: {order.totalPrice} kr.</p>
       <p>Order status: {order.status}</p>
 
+      <hr className="my-3" />
+
+      <strong>Items ordered:</strong>
+      <ul className="list-disc ml-6">{getItemsOrdered(order.items)}</ul>
+
       <div className="flex gap-3 mt-3">
-        <Link
-          href={`/dashboard/restaurant/items/${order.id}`}
-          className={cn(buttonVariants({ variant: "default" }), "w-full")}
+        <AlertDialog>
+          <AlertDialogTrigger
+            asChild
+            disabled={!canCancelOrder(order.status) || loading}
+          >
+            <Button variant="destructive" className="">
+              Cancel order
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. This will cancel the order{" "}
+                <strong>#{order.id}</strong>, costing the customer{" "}
+                <strong>{order.totalPrice} kr.</strong>
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={() => handleCancelOrder(order)}>
+                Continue
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+        <Button
+          variant="default"
+          className="w-full"
+          disabled={disabled || loading}
+          onClick={() => handleButtonClick(order)}
         >
-          Manage
-        </Link>
+          {buttonText}
+        </Button>
+      </div>
+    </article>
+  );
+};
+
+export const PartnerOrderCard = ({
+  order,
+  activeDelivery,
+  distance,
+  duration,
+  loading,
+  handleButtonClick
+}: {
+  order: OrderDTO;
+  activeDelivery: OrderDTO | null;
+  distance?: string;
+  duration?: string;
+  loading: boolean;
+  handleButtonClick: (order: OrderDTO) => void;
+}) => {
+  return (
+    <article className="bg-white p-6 rounded-lg shadow">
+      <header>
+        <h2 className="text-xl font-semibold">Order #{order.id}</h2>
+      </header>
+      <p>
+        <strong>Pickup address:</strong> {order.restaurant?.name},{" "}
+        {order.restaurant?.address},{" "}
+        <span className="whitespace-nowrap">
+          {order.restaurant?.zipCode} {order.restaurant?.city}
+        </span>
+      </p>
+      <p>
+        <strong>Delivery address:</strong> {order.customer?.address},{" "}
+        <span className="whitespace-nowrap">
+          {order.customer?.zipCode} {order.customer?.city}
+        </span>
+      </p>
+      <p>
+        <strong>Distance:</strong> {distance || "Unknown"} (
+        {duration || "Unknown"})
+      </p>
+
+      <div className="flex gap-3 mt-3">
+        <Button
+          variant="default"
+          className="w-full"
+          disabled={activeDelivery !== null || loading}
+          onClick={() => handleButtonClick(order)}
+        >
+          Accept delivery
+        </Button>
       </div>
     </article>
   );

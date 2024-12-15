@@ -15,10 +15,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Sync } from "@mui/icons-material";
 import { useState } from "react";
-import { resetPassword } from "@/lib/api";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { resetPassword } from "@/lib/api/auth/resetPassword";
 
 interface ResetFormProps {
   email: string;

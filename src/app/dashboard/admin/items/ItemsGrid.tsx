@@ -1,7 +1,8 @@
 "use client";
 
 import { AdminItemCard, DashboardGrid } from "@/components/DashboardGrid";
-import { adminBlockItem, adminGetItems } from "@/lib/api";
+import { adminBlockItem } from "@/lib/api/admin/adminBlockItem";
+import { adminGetItems } from "@/lib/api/admin/adminGetItems";
 import { ItemDTO } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";

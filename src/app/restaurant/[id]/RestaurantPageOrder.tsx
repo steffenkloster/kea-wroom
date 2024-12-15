@@ -2,7 +2,7 @@
 import { Section } from "@/components/Section";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { userPlaceOrder } from "@/lib/api";
+import { customerPlaceOrder } from "@/lib/api/customers/customerPlaceOrder";
 import { CartItem, RestaurantDTO } from "@/types";
 import { useRouter } from "next/navigation";
 import { useState, useMemo } from "react";
@@ -51,7 +51,7 @@ const RestaurantPageOrder = ({ restaurant }: { restaurant: RestaurantDTO }) => {
   };
 
   const placeOrder = async () => {
-    const response = await userPlaceOrder(restaurant.id, cartItems, {
+    const response = await customerPlaceOrder(restaurant.id, cartItems, {
       setLoading
     });
 

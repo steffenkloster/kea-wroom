@@ -13,13 +13,14 @@ import {
   FormMessage
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { getOwnRestaurant, updateRestaurant } from "@/lib/api";
 import { Sync } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { RestaurantDTO } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { updateRestaurant } from "@/lib/api/restaurants/updateRestaurant";
+import { getOwnRestaurant } from "@/lib/api/restaurants/getOwnRestaurant";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -76,10 +77,8 @@ const RestaurantInformationTab = () => {
   }, [data, reset]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    if (!data?.id) return;
-
     setLoading(true);
-    await updateRestaurant(data.id, values, {
+    await updateRestaurant(values, {
       setLoading,
       onSuccess: () => {
         toast.success("Restaurant information updated successfully.");

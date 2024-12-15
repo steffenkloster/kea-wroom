@@ -1,138 +1,70 @@
-import { getToken } from "next-auth/jwt";
+import { getUser } from "@/lib/utils.server";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
-import { prisma } from "@/lib/prisma";
 
-export async function GET(req: NextRequest) {
-  try {
-    const token = await getToken({
-      req,
-      secret: process.env.NEXTAUTH_SECRET,
-      cookieName: "next-auth.session-token",
-      secureCookie: process.env.NODE_ENV === "production"
-    });
+export const GET = async (req: NextRequest) => {
+  const user = await getUser(req, true);
+  if (user instanceof NextResponse) return user;
 
-    const isAuthenticated = !!token;
+  return NextResponse.json(
+    { message: "Retrieved user successfully", data: user },
+    { status: 200 }
+  );
+};
 
-    if (!isAuthenticated) {
-      return NextResponse.json({ error: "Not authenticated" }, { status: 403 });
-    }
+export const PATCH = async (req: NextRequest) => {
+  const user = await getUser(req, true);
+  if (user instanceof NextResponse) return user;
 
-    const user = await prisma.user.findUnique({
-      where: { id: token.id },
-      include: { restaurant: true }
-    });
-
-    if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
-    }
-
-    const { password: _, ...sanitizedUser } = user;
-
-    return NextResponse.json(
-      { message: "User retrieved", data: sanitizedUser },
-      { status: 200 }
-    );
-  } catch (error) {
-    console.error("Error fetching user:", error);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
-    );
+  const body = await req.json();
+  if (!body) {
+    return NextResponse.json({ error: "Missing fields" }, { status: 400 });
   }
-}
 
-export async function PATCH(req: NextRequest) {
-  try {
-    const token = await getToken({
-      req,
-      secret: process.env.NEXTAUTH_SECRET,
-      cookieName: "next-auth.session-token",
-      secureCookie: process.env.NODE_ENV === "production"
-    });
+  const allowedFields = [
+    "firstName",
+    "lastName",
+    "phone",
+    //"email",
+    "password",
+    "address",
+    "city",
+    "zipCode"
+  ];
+  const updateData: { [key: string]: any } = {};
 
-    const isAuthenticated = !!token;
-
-    if (!isAuthenticated) {
-      return NextResponse.json({ error: "Not authenticated" }, { status: 403 });
-    }
-
-    const user = await prisma.user.findUnique({
-      where: { id: token.id }
-    });
-
-    if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
-    }
-
-    const { password } = await req.json();
-    if (password) {
-      const hashedPassword = await bcrypt.hash(password, 10);
-
-      await prisma.user.update({
-        where: { id: user.id },
-        data: { password: hashedPassword, passwordResetToken: null }
-      });
-
-      return NextResponse.json(
-        { message: "Updated password" },
-        { status: 200 }
-      );
-    }
-
-    const { firstName, lastName, phone, address, city, zipCode } =
-      await req.json();
-    if (!firstName || !lastName || !phone || !address || !city || !zipCode) {
-      return NextResponse.json({ error: "Missing fields" }, { status: 400 });
-    }
-
-    const updatedUser = await prisma.user.update({
-      where: { id: token.id },
-      data: {
-        firstName,
-        lastName,
-        phone,
-        address,
-        city,
-        zipCode
+  for (const key of Object.keys(body)) {
+    if (allowedFields.includes(key)) {
+      if (key === "password") {
+        updateData[key] = await bcrypt.hash(body[key], 10);
+      } else {
+        updateData[key] = body[key];
       }
-    });
+    }
+  }
 
+  if (Object.keys(updateData).length === 0) {
     return NextResponse.json(
-      { message: "User updated", data: updatedUser },
-      { status: 200 }
-    );
-  } catch (error) {
-    console.error("Error fetching user:", error);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
+      { error: "No valid fields to update" },
+      { status: 400 }
     );
   }
-}
+
+  const updatedUser = await prisma.user.update({
+    where: { id: user.id },
+    data: body
+  });
+
+  return NextResponse.json(
+    { message: "User updated successfully", data: updatedUser },
+    { status: 200 }
+  );
+};
 
 export async function DELETE(req: NextRequest) {
   try {
-    const token = await getToken({
-      req,
-      secret: process.env.NEXTAUTH_SECRET,
-      cookieName: "next-auth.session-token",
-      secureCookie: process.env.NODE_ENV === "production"
-    });
-
-    const isAuthenticated = !!token;
-
-    if (!isAuthenticated) {
-      return NextResponse.json({ error: "Not authenticated" }, { status: 403 });
-    }
-
-    const user = await prisma.user.findUnique({
-      where: { id: token.id }
-    });
-
-    if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
-    }
+    const user = await getUser(req);
+    if (user instanceof NextResponse) return user;
 
     const { password } = await req.json();
     if (!password) {
@@ -145,7 +77,7 @@ export async function DELETE(req: NextRequest) {
     }
 
     await prisma.user.update({
-      where: { id: token.id },
+      where: { id: user.id },
       data: {
         isDeleted: true
       }

@@ -1,7 +1,8 @@
 "use client";
 
 import { ItemCard, DashboardGrid } from "@/components/DashboardGrid";
-import { deleteItem, getItems } from "@/lib/api";
+import { deleteItem } from "@/lib/api/restaurants/deleteItem";
+import { getItems } from "@/lib/api/restaurants/getItems";
 import { ItemDTO } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
@@ -51,11 +52,13 @@ const ItemsGrid = () => {
   }
 
   return (
-    <DashboardGrid>
-      {items.map((item) => (
-        <ItemCard key={item.id} item={item} onDelete={handleDeleteItem} />
-      ))}
-    </DashboardGrid>
+    <>
+      <DashboardGrid>
+        {items.map((item) => (
+          <ItemCard key={item.id} item={item} onDelete={handleDeleteItem} />
+        ))}
+      </DashboardGrid>
+    </>
   );
 };
 

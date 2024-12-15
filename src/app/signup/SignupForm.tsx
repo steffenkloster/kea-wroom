@@ -14,12 +14,12 @@ import {
   FormMessage
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { createUser } from "@/lib/api";
 import { Sync } from "@mui/icons-material";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Role } from "@/types";
+import { createUser } from "@/lib/api/auth/createUser";
 
 const emailRegex = /^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/;
 const formSchema = z

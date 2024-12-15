@@ -1,13 +1,14 @@
 "use client";
 
 import { UserCard, DashboardGrid } from "@/components/DashboardGrid";
-import { adminBlockUser, adminGetUsers } from "@/lib/api";
 import { UserDTO } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 
 import { toast } from "sonner";
+import { adminGetUsers } from "@/lib/api/admin/adminGetUsers";
+import { adminBlockUser } from "@/lib/api/admin/adminBlockUser";
 
 const ItemsGrid = () => {
   const { isLoading, data } = useQuery({

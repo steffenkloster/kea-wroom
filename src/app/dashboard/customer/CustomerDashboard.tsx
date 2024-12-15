@@ -3,7 +3,7 @@
 import MapComponent from "@/components/MapComponent";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { getAllRestaurants } from "@/lib/api";
+import { getAllRestaurants } from "@/lib/api/public/getAllRestaurants";
 import { RestaurantDTO } from "@/types";
 import { handleGetCurrentLocation } from "@/utils/location";
 import { useQuery } from "@tanstack/react-query";

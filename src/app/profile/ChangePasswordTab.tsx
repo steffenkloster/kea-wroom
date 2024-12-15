@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Sync } from "@mui/icons-material";
 import { toast } from "sonner";
 import { useState } from "react";
-import { updateOwnUser } from "@/lib/api";
+import { updateOwnUser } from "@/lib/api/me/updateOwnUser";
 
 const formSchema = z
   .object({

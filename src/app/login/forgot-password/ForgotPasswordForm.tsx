@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { forgotPassword } from "@/lib/api";
+import { forgotPassword } from "@/lib/api/auth/forgotPassword";
 
 export default function ForgotPasswordForm() {
   const [loading, setLoading] = useState(false);

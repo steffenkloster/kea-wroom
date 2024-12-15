@@ -4,8 +4,8 @@ import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import Image from "next/image";
 import { useSessionContext } from "../providers/SessionProvider";
-import { logoutUser } from "@/lib/api";
 import { toast } from "sonner";
+import { logoutUser } from "@/lib/api/auth/logoutUser";
 
 export const Navbar = () => {
   const session = useSessionContext();

@@ -9,6 +9,7 @@ import SessionProvider from "@/providers/SessionProvider";
 import ReactQueryProvider from "@/providers/ReactQueryProvider";
 import { decode, JWT } from "next-auth/jwt";
 import Head from "next/head";
+import { getTokenFromCookies } from "@/lib/utils.server";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -37,21 +38,14 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const cookieStore = await cookies();
-  const token = cookieStore.get("next-auth.session-token")?.value;
-
-  const decodedToken = token
-    ? await decode({
-        token,
-        secret: process.env.NEXTAUTH_SECRET!
-      })
-    : null;
+  const token = await getTokenFromCookies(cookieStore);
 
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <SessionProvider session={decodedToken}>
+        <SessionProvider session={token}>
           <ReactQueryProvider>
             <Navbar />
             <main>{children}</main>

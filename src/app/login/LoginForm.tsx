@@ -13,11 +13,11 @@ import {
   FormMessage
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { loginUser } from "@/lib/api";
 import { Sync } from "@mui/icons-material";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { loginUser } from "@/lib/api/auth/loginUser";
 
 const emailRegex = /^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/;
 const formSchema = z.object({

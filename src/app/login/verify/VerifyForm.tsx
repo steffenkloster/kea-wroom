@@ -23,7 +23,8 @@ import {
   InputOTPGroup,
   InputOTPSlot
 } from "@/components/ui/input-otp";
-import { resendVerificationCode, verifyUser } from "@/lib/api";
+import { verifyUser } from "@/lib/api/auth/verifyUser";
+import { resendVerificationCode } from "@/lib/api/auth/resendVerificationCode";
 
 const FormSchema = z.object({
   pin: z.string().regex(/^\d{6}$/, {
@@ -84,7 +85,7 @@ const VerifyForm = () => {
           name="pin"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>One-Time Password</FormLabel>
+              <FormLabel>Your verification code</FormLabel>
               <FormControl>
                 <InputOTP maxLength={6} {...field}>
                   <InputOTPGroup>

@@ -13,12 +13,13 @@ import {
   FormMessage
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { getOwnUser, updateOwnUser } from "@/lib/api";
 import { Sync } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { UserDTO } from "@/types";
 import { useQuery } from "@tanstack/react-query";
+import { getOwnUser } from "@/lib/api/me/getOwnUser";
+import { updateOwnUser } from "@/lib/api/me/updateOwnUser";
 
 const formSchema = z.object({
   firstName: z.string().min(2, {

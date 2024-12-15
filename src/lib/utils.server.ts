@@ -1,9 +1,10 @@
 import { UserWithRestaurant } from "@/types/prisma";
 import { Prisma } from "@prisma/client";
-import { getToken } from "next-auth/jwt";
+import { decode, getToken } from "next-auth/jwt";
 import { NextResponse, NextRequest } from "next/server";
 import fetch from "node-fetch";
 import { prisma } from "@/lib/prisma";
+import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 
 interface GeocodingResult {
   results: Array<{
@@ -100,4 +101,15 @@ export async function getUser<IncludeRestaurant extends boolean = false>(
   return user as IncludeRestaurant extends true
     ? UserWithRestaurant
     : Prisma.UserGetPayload<{}>;
+}
+
+export async function getTokenFromCookies(cookieStore: ReadonlyRequestCookies) {
+  const token = cookieStore.get("next-auth.session-token")?.value;
+
+  return token
+    ? await decode({
+        token,
+        secret: process.env.NEXTAUTH_SECRET!
+      })
+    : null;
 }
