@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getUser } from "@/lib/utils.server";
 import sendMail from "@/lib/mail";
 import { prisma } from "@/lib/prisma";
+import { sanitizeUser } from "@/lib/sanitize";
 
 export async function PATCH(
   req: NextRequest,
@@ -33,6 +34,8 @@ export async function PATCH(
     }
   });
 
+  const sanitizedUser = sanitizeUser(updatedUser);
+
   sendMail(
     updatedUser.email,
     `Your account has been ${updatedUser.isBlocked ? "blocked" : "unblocked"}`,
@@ -42,7 +45,7 @@ export async function PATCH(
   );
 
   return NextResponse.json(
-    { message: "User block updated", data: updatedUser },
+    { message: "User block updated", data: sanitizedUser },
     { status: 200 }
   );
 }
