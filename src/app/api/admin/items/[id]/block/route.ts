@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import sendMail from "@/lib/mail";
 import { prisma } from "@/lib/prisma";
 
-export async function PATCH({ params }: { params: { id: string } }) {
+export async function PATCH(_: never, { params }: { params: { id: string } }) {
   const { id } = await params;
   const item = await prisma.item.findUnique({
     where: { id },

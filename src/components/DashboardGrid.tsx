@@ -314,7 +314,9 @@ export const AdminItemCard = ({
       <header>
         <h2 className="text-xl font-semibold">{item.name}</h2>
       </header>
-      <p>{item.restaurant.name}</p>
+      <Link href={`/dashboard/restaurants/${item.restaurant.id}`}>
+        {item.restaurant.name}
+      </Link>
 
       <div className="flex gap-3 mt-3">
         <Button
@@ -324,12 +326,6 @@ export const AdminItemCard = ({
           {item.isBlocked ? "Unblock" : "Block"}
         </Button>
 
-        {/* <Link
-          href={`/dashboard/admin/items/${item.id}`}
-          className={cn(buttonVariants({ variant: "default" }), "w-full")}
-        >
-          Edit item
-        </Link> */}
         <Button variant="default" className="w-full" disabled>
           Edit item
         </Button>

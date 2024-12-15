@@ -1,6 +1,7 @@
 "use client";
 
 import { AdminItemCard, DashboardGrid } from "@/components/DashboardGrid";
+import { Input } from "@/components/ui/input";
 import { adminBlockItem } from "@/lib/api/admin/adminBlockItem";
 import { adminGetItems } from "@/lib/api/admin/adminGetItems";
 import { ItemDTO } from "@/types";
@@ -58,6 +59,8 @@ const ItemsGrid = () => {
   };
 
   const [items, setItems] = useState<ItemDTO[]>([]);
+  const [query, setQuery] = useState("");
+  const [filteredItems, setFilteredItems] = useState<ItemDTO[]>([]);
 
   useEffect(() => {
     if (data) {
@@ -65,20 +68,40 @@ const ItemsGrid = () => {
     }
   }, [data]);
 
+  useEffect(() => {
+    const lowerCaseQuery = query.toLowerCase();
+
+    setFilteredItems(
+      items.filter((item) => {
+        return (
+          item.name.toLowerCase().includes(lowerCaseQuery) ||
+          item.restaurant.name.toLowerCase().includes(lowerCaseQuery)
+        );
+      })
+    );
+  }, [query, items]);
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
   return (
-    <DashboardGrid>
-      {items.map((item) => (
-        <AdminItemCard
-          key={item.id}
-          item={item}
-          handleClickEvent={handleClickEvent}
-        />
-      ))}
-    </DashboardGrid>
+    <>
+      <Input
+        onChange={(e) => setQuery(e.target.value)}
+        value={query}
+        placeholder="Search items by name or restaurant name"
+      />
+      <DashboardGrid>
+        {filteredItems.map((item) => (
+          <AdminItemCard
+            key={item.id}
+            item={item}
+            handleClickEvent={handleClickEvent}
+          />
+        ))}
+      </DashboardGrid>
+    </>
   );
 };
 

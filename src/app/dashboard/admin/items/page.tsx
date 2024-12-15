@@ -1,7 +1,14 @@
 import { Section } from "@/components/Section";
-import { buttonVariants } from "@/components/ui/button";
 import ItemsGrid from "./ItemsGrid";
-import Link from "next/link";
+
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator
+} from "@/components/ui/breadcrumb";
 
 export const metadata = {
   title: "Items - Admin Dashboard - Wroom",
@@ -11,7 +18,19 @@ export const metadata = {
 const RestaurantItemsPage = () => {
   return (
     <Section>
-      <header className="flex justify-between">
+      <Breadcrumb className="mb-3">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/dashboard/admin">Dashboard</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>Items</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+
+      <header className="flex justify-between mb-3">
         <div>
           <h1>Restaurant Items</h1>
           <p>
@@ -19,13 +38,6 @@ const RestaurantItemsPage = () => {
             remove.
           </p>
         </div>
-
-        <Link
-          href="/dashboard/restaurant/items/new"
-          className={buttonVariants({ variant: "default" })}
-        >
-          Add new item
-        </Link>
       </header>
 
       <ItemsGrid />

@@ -15,11 +15,11 @@ const AdminDashboardPage = () => {
           text="View and manage all users."
           link="/dashboard/admin/users"
         />
-        <DashboardCard
+        {/* <DashboardCard
           header="Restaurants"
           text="View and manage all restaurants."
           link="/dashboard/admin/restaurants"
-        />
+        /> */}
         <DashboardCard
           header="Items"
           text="View and manage all items."

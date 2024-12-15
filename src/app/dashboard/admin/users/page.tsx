@@ -2,6 +2,15 @@ import { Section } from "@/components/Section";
 import { Button } from "@/components/ui/button";
 import UsersGrid from "./UsersGrid";
 
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator
+} from "@/components/ui/breadcrumb";
+
 export const metadata = {
   title: "Users - Admin Dashboard - Wroom",
   description: "Manage users in the admin dashboard of Wroom."
@@ -10,7 +19,21 @@ export const metadata = {
 const AdminUsersPage = () => {
   return (
     <Section>
-      <header className="flex justify-between">
+      <Breadcrumb className="mb-3">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/dashboard/restaurant">
+              Dashboard
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>Users</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+
+      <header className="flex justify-between mb-3">
         <div>
           <h1>Manage users</h1>
           <p>
@@ -20,9 +43,6 @@ const AdminUsersPage = () => {
         </div>
 
         <Button disabled={true}>Add new user</Button>
-        {/* <Button asChild>
-          <Link href="/dashboard/restaurant/items/new">Add new user</Link>
-        </Button> */}
       </header>
 
       <UsersGrid />
