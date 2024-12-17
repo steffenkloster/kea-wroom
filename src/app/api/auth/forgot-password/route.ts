@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
     data: { passwordResetToken }
   });
 
-  sendMail(
+  await sendMail(
     user.email,
     "Reset your password",
     `Click here to reset your password: <a href="${process.env.NEXTAUTH_URL}/login/forgot-password/${passwordResetToken}">${process.env.NEXTAUTH_URL}/login/forgot-password/${passwordResetToken}</a>`
