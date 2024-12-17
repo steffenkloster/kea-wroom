@@ -1,26 +1,35 @@
 "use client";
 
-import React, { createContext, useContext } from "react";
+import React, { createContext, useContext, useState } from "react";
 import { JWT } from "next-auth/jwt";
 
-const SessionContext = createContext<JWT | null>(null);
+interface SessionContextType {
+  session: JWT | null; // Adjust this to your session type
+  setSession: (session: JWT | null) => void;
+}
+
+const SessionContext = createContext<SessionContextType | null>(null);
 
 export const useSessionContext = () => {
-  return useContext(SessionContext);
+  const context = useContext(SessionContext);
+  if (!context) {
+    throw new Error("useSessionContext must be used within a SessionProvider");
+  }
+  return context;
 };
 
 export const SessionProvider = ({
   children,
-  session
+  token
 }: {
   children: React.ReactNode;
-  session: JWT | null;
+  token: JWT | null;
 }) => {
+  const [session, setSession] = useState<JWT | null>(token);
+
   return (
-    <SessionContext.Provider value={session}>
+    <SessionContext.Provider value={{ session, setSession }}>
       {children}
     </SessionContext.Provider>
   );
 };
-
-export default SessionProvider;

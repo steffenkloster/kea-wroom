@@ -6,19 +6,23 @@ import Image from "next/image";
 import { useSessionContext } from "../providers/SessionProvider";
 import { toast } from "sonner";
 import { logoutUser } from "@/lib/api/auth/logoutUser";
+import { useRouter } from "next/navigation";
 
 export const Navbar = () => {
-  const session = useSessionContext();
+  const sessionContext = useSessionContext();
+  const router = useRouter();
 
   const logout = async () => {
     await logoutUser();
 
+    sessionContext.setSession(null);
+
     toast.success("You have been logged out.");
-    window.location.replace("/");
+    router.push("/");
   };
 
   const renderButtons = () => {
-    if (session) {
+    if (sessionContext.session) {
       return (
         <>
           <Button variant={"ghost"} onClick={logout}>
@@ -31,7 +35,7 @@ export const Navbar = () => {
             Profile
           </Link>
           <Link
-            href={`/dashboard/${session.role.toLowerCase()}`}
+            href={`/dashboard/${sessionContext.session.role.toLowerCase()}`}
             className={buttonVariants({ variant: "default" })}
           >
             Dashboard
@@ -53,7 +57,7 @@ export const Navbar = () => {
   };
 
   return (
-    <header className="top-0 sticky h-20 bg-white text-black z-30 shadow-md">
+    <header className="top-0 sticky h-20 bg-white text-black z-30 shadow-md px-6">
       <nav>
         <div className="max-w-content relative mx-auto w-full">
           <div className="flex items-center justify-between h-20">
@@ -67,62 +71,3 @@ export const Navbar = () => {
     </header>
   );
 };
-
-// "use client";
-// import Link from "next/link";
-// import { buttonVariants } from "@/components/ui/button";
-// import { useSession } from "next-auth/react";
-// import { Session } from "next-auth";
-
-// export const Navbar = () => {
-//   const { data: session, status } = useSession();
-
-//   const renderButtons = (status: string, session: Session | null) => {
-//     if (status === "loading") {
-//       return <p></p>;
-//     }
-
-//     if (session) {
-//       return (
-//         <>
-//           <Link
-//             href={`/${session.user.role.toLowerCase()}/profile`}
-//             className={buttonVariants({ variant: "ghost" })}
-//           >
-//             My Profile
-//           </Link>
-//           <Link
-//             href={`/${session.user.role.toLowerCase()}/dashboard`}
-//             className={buttonVariants({ variant: "default" })}
-//           >
-//             Dashboard
-//           </Link>
-//         </>
-//       );
-//     }
-
-//     return (
-//       <>
-//         <Link href="/login" className={buttonVariants({ variant: "ghost" })}>
-//           Login
-//         </Link>
-//         <Link href="/signup" className={buttonVariants({ variant: "default" })}>
-//           Sign up
-//         </Link>
-//       </>
-//     );
-//   };
-
-//   return (
-//     <header className="top-0 sticky h-20 bg-white text-black z-30 shadow-md">
-//       <nav>
-//         <div className="max-w-content relative mx-auto w-full">
-//           <div className="flex items-center justify-between h-20">
-//             <p>Logo</p>
-//             <div className="flex gap-3">{renderButtons(status, session)}</div>
-//           </div>
-//         </div>
-//       </nav>
-//     </header>
-//   );
-// };

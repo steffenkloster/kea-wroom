@@ -2,13 +2,16 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 interface InputProps extends React.ComponentProps<"input"> {
-  icon?: React.ReactNode; // Optional prop for passing an SVG icon
+  icon?: React.ReactNode;
+  fullWidth?: boolean;
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, icon, ...props }, ref) => {
+  ({ className, type, icon, fullWidth, ...props }, ref) => {
     return (
-      <div className="relative flex items-center">
+      <div
+        className={cn("relative flex items-center", fullWidth ? "w-full" : "")}
+      >
         {icon && (
           <span className="absolute left-3 inline-flex items-center text-muted-foreground">
             {icon}

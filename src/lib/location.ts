@@ -88,7 +88,6 @@ export const getDistance = async (
     }
 
     const json = await response.json();
-    console.log(json);
 
     if (json.data.rows[0]?.elements[0]?.status === "OK") {
       const distance = json.data.rows[0].elements[0].distance.text;
@@ -122,7 +121,6 @@ export const getCoordinates = async (
 
     if (data.results && data.results.length > 0) {
       const { lat, lng } = data.results[0].geometry.location;
-      console.log("Coordinates address:", address, lat, lng);
       return new google.maps.LatLng(lat, lng);
     } else {
       console.error("No results found for address:", address, data);

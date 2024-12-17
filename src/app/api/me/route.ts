@@ -67,7 +67,7 @@ export const PATCH = async (req: NextRequest) => {
 
   const updatedUser = await prisma.user.update({
     where: { id: user.id },
-    data: body
+    data: updateData
   });
 
   const sanitizedUser = sanitizeUser(updatedUser);

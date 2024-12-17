@@ -41,10 +41,16 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Check if the user is active
     if (user.isDeleted) {
       return NextResponse.json(
         { error: "This account has been deactivated" },
+        { status: 403 }
+      );
+    }
+
+    if (user.isBlocked) {
+      return NextResponse.json(
+        { error: "This account has been blocked" },
         { status: 403 }
       );
     }
@@ -67,8 +73,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    console.log("Encoding token");
-    console.log("Secret:", process.env.NEXTAUTH_SECRET);
     const token = await encode({
       token: {
         id: user.id,
@@ -98,7 +102,6 @@ export async function POST(req: NextRequest) {
       { status: 200 }
     );
 
-    console.log("Setting cookie");
     response.cookies.set("next-auth.session-token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",

@@ -23,28 +23,10 @@ export async function POST(req: NextRequest) {
       return user;
     }
 
-    if (!user || user.role !== "CUSTOMER") {
-      return NextResponse.json(
-        { error: "You must be authenticated as a customer to place an order." },
-        { status: 403 }
-      );
-    }
-
-    // Debugging user
-    console.log("Authenticated User:", user);
-
     const restaurant = await prisma.restaurant.findUnique({
       where: { id: restaurantId },
       include: { owner: true, items: true }
     });
-
-    // Debugging restaurant and its items
-    console.log("Restaurant Data:", restaurant);
-    if (restaurant?.items) {
-      console.log("Restaurant Items:", restaurant.items);
-    } else {
-      console.log("Restaurant Items are missing or undefined.");
-    }
 
     if (
       !restaurant ||
@@ -109,7 +91,7 @@ export async function GET(req: NextRequest) {
 
   const orders = await prisma.order.findMany({
     where: { customerId: user.id },
-    include: { items: { include: { item: true } } }
+    include: { restaurant: true, items: { include: { item: true } } }
   });
 
   return NextResponse.json(

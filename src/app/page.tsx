@@ -30,12 +30,22 @@ export default function Home() {
           </div>
         }
       >
-        <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center z-10 max-w-content">
+        <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center z-10 max-w-content px-6">
           <div className="max-w-lg flex flex-col gap-6">
             <h1 className="text-white text-5xl">
               Fast, fresh, delicious. Wroomed straight to your door.
             </h1>
-            <div className="flex gap-3 items-end">
+            <p className="text-white">
+              Craving your favorite dish? Order from your go-to restaurant or
+              discover new flavors with Wroom. We deliver your favorite meals
+              straight to your door, so you can enjoy them in the comfort of
+              your home. Fast, fresh, and delicious — that&apos;s the Wroom
+              promise.
+            </p>
+            <Button variant={"secondary"} asChild className="w-48">
+              <Link href="/signup">Sign up today</Link>
+            </Button>
+            {/* <div className="flex gap-3 items-end">
               <div className="grid w-full items-center gap-1.5 flex-grow">
                 <Label htmlFor="address">Your delivery address</Label>
                 <AddressAutocompleteInput
@@ -47,19 +57,19 @@ export default function Home() {
                 />
               </div>
               <Button variant={"secondary"}>Find restaurants</Button>
-            </div>
+            </div> */}
           </div>
         </div>
       </Section>
 
       <Section className="bg-gray-50">
-        <div className="grid grid-cols-3 gap-12">
-          <div className="relative w-full rounded-lg overflow-hidden">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-y-6 sm:gap-x-12">
+          <div className="relative w-full rounded-lg overflow-hidden min-h-64 order-last sm:order-first">
             <Image
               src="/courier.jpg"
               alt="Courier delivering packages"
               fill
-              className="object-cover w-full"
+              className="object-cover w-full min-h-64"
               priority
             />
           </div>
@@ -84,7 +94,7 @@ export default function Home() {
       </Section>
 
       <Section className="bg-white">
-        <div className="grid grid-cols-3 gap-12">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-y-6 sm:gap-x-12">
           <div className="flex flex-col gap-3 col-span-2">
             <h2 className="text-3xl text-black">
               Grow Your Restaurant with Wroom
@@ -106,12 +116,12 @@ export default function Home() {
             </Button>
           </div>
 
-          <div className="relative w-full rounded-lg overflow-hidden">
+          <div className="relative w-full rounded-lg overflow-hidden min-h-64">
             <Image
               src="/restaurant.jpeg"
               alt="Courier delivering packages"
               fill
-              className="object-cover w-full"
+              className="object-cover w-full min-h-64"
               priority
             />
           </div>

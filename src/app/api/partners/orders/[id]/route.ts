@@ -52,7 +52,21 @@ export async function PATCH(
   const updatedOrder = await prisma.order.update({
     where: { id },
     data: { status, courierId: user.id },
-    include: { items: { include: { item: true } } }
+    include: {
+      items: { include: { item: true } },
+      courier: true,
+      restaurant: true,
+      customer: {
+        select: {
+          firstName: true,
+          lastName: true,
+          phone: true,
+          address: true,
+          city: true,
+          zipCode: true
+        }
+      }
+    }
   });
 
   return NextResponse.json(

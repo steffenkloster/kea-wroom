@@ -4,12 +4,37 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { customerPlaceOrder } from "@/lib/api/customers/customerPlaceOrder";
 import { CartItem, RestaurantDTO } from "@/types";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState, useMemo } from "react";
 import { toast } from "sonner";
 
-const RestaurantPageOrder = ({ restaurant }: { restaurant: RestaurantDTO }) => {
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator
+} from "@/components/ui/breadcrumb";
+
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious
+} from "@/components/ui/carousel";
+import Image from "next/image";
+
+const RestaurantPageOrder = ({
+  restaurant,
+  isAuthenticated
+}: {
+  restaurant: RestaurantDTO;
+  isAuthenticated: boolean;
+}) => {
   const router = useRouter();
+  const pathname = usePathname();
 
   const addItemToCart = (itemId: string) => {
     setCartItems((prevItems) => {
@@ -61,11 +86,12 @@ const RestaurantPageOrder = ({ restaurant }: { restaurant: RestaurantDTO }) => {
 
     setLoading(true);
     toast.success("Order placed successfully!");
-    router.push(`/orders/${response.data.id}`);
+    router.push(`/order/${response.data.id}`);
   };
 
   const [loading, setLoading] = useState(false);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [query, setQuery] = useState("");
 
   const totalAmount = useMemo(() => {
     return cartItems
@@ -77,10 +103,30 @@ const RestaurantPageOrder = ({ restaurant }: { restaurant: RestaurantDTO }) => {
       .toFixed(2);
   }, [cartItems, restaurant.items]);
 
+  const filteredItems = useMemo(() => {
+    return restaurant.items.filter((item) =>
+      item.name.toLowerCase().includes(query.toLowerCase())
+    );
+  }, [restaurant.items, query]);
+
   return (
     <>
       <Section>
         <div className="max-w-screen-md mx-auto">
+          <Breadcrumb className="mb-3">
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/dashboard/customer">
+                  Dashboard
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>{restaurant.name}</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+
           <header className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div>
               <h1>{restaurant.name}</h1>
@@ -101,22 +147,54 @@ const RestaurantPageOrder = ({ restaurant }: { restaurant: RestaurantDTO }) => {
       </Section>
       <Section className="bg-secondary">
         <div className="max-w-screen-md mx-auto">
-          <header>
-            <h2 className="mb-3">Menu</h2>
+          <header className="flex justify-between w-full mb-3">
+            <h2 className="">Menu</h2>
+            <Input
+              placeholder="Search..."
+              className=""
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+            />
           </header>
           <div className="flex flex-col gap-3">
-            {restaurant.items.map((item) => (
+            {filteredItems.map((item) => (
               <article key={item.id} className="bg-white p-6 rounded-lg shadow">
-                <div className="flex justify-between items-end">
-                  <div>
-                    <header>
-                      <h3 className="text-xl font-semibold">{item.name}</h3>
-                    </header>
-                    <p>{item.description}</p>
-                    <p>Price: {item.price} kr.</p>
+                <div className="flex justify-between gap-3 sm:gap-0 sm:items-center sm:flex-row flex-col">
+                  <div className="flex flex-col items-center sm:flex-row gap-x-3 gap-y-6">
+                    {item.images && item.images.length > 0 ? (
+                      <Carousel
+                        className="ml-12 mr-14 w-32 h-32 flex-shrink-0"
+                        opts={{ loop: true }}
+                      >
+                        <CarouselContent>
+                          {item.images.map((image, i) => (
+                            <CarouselItem key={`item-${item.id}-image-${i}`}>
+                              <Image
+                                src={image}
+                                alt={item.name}
+                                width={128}
+                                height={128}
+                                className="w-32 h-32 object-cover flex-shrink-0"
+                              />
+                            </CarouselItem>
+                          ))}
+                        </CarouselContent>
+                        <CarouselPrevious />
+                        <CarouselNext />
+                      </Carousel>
+                    ) : (
+                      <></>
+                    )}
+                    <div className="flex flex-col justify-center w-full">
+                      <header>
+                        <h3 className="text-xl font-semibold">{item.name}</h3>
+                      </header>
+                      <p>{item.description}</p>
+                    </div>
                   </div>
 
-                  <div>
+                  <div className="flex justify-between items-end sm:flex-col sm:gap-3">
+                    <p>Price: {item.price} kr.</p>
                     <div className="flex gap-2">
                       <Button
                         onClick={() => {
@@ -184,13 +262,24 @@ const RestaurantPageOrder = ({ restaurant }: { restaurant: RestaurantDTO }) => {
       <Section className="fixed bottom-0 bg-primary h-20 text-white">
         <div className="max-w-screen-md mx-auto h-full flex items-center justify-between">
           <div>Total amount: {totalAmount} kr.</div>
-          <Button
-            variant={"secondary"}
-            disabled={loading || cartItems.length == 0}
-            onClick={placeOrder}
-          >
-            Order now!
-          </Button>
+          {isAuthenticated ? (
+            <Button
+              variant={"secondary"}
+              disabled={loading || cartItems.length == 0}
+              onClick={placeOrder}
+            >
+              Place order
+            </Button>
+          ) : (
+            <Button
+              onClick={() =>
+                router.push(`/login?path=${encodeURIComponent(pathname)}`)
+              }
+              variant={"secondary"}
+            >
+              Log in to place order
+            </Button>
+          )}
         </div>
       </Section>
     </>

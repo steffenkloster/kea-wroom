@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import { Item } from "@prisma/client";
+import { getTokenFromCookies } from "@/lib/utils.server";
+import { cookies } from "next/headers";
 
 export async function generateMetadata({
   params
@@ -38,9 +40,17 @@ export async function generateMetadata({
 
 const RestaurantPage = async ({ params }: { params: { id: string } }) => {
   const { id } = await params;
+  const cookieStore = await cookies();
+  const token = await getTokenFromCookies(cookieStore);
+  const isAuthenticated = !!token;
+
   const restaurant = await prisma.restaurant.findUnique({
     where: { id },
-    include: { items: true }
+    include: {
+      items: {
+        where: { isBlocked: false }
+      }
+    }
   });
 
   if (!restaurant) {
@@ -58,15 +68,29 @@ const RestaurantPage = async ({ params }: { params: { id: string } }) => {
     address: restaurant.address,
     zipCode: restaurant.zipCode,
     city: restaurant.city,
+    latitude: restaurant.latitude,
+    longitude: restaurant.longitude,
+    isBlocked: restaurant.isBlocked,
+    createdAt: restaurant.createdAt,
+    updatedAt: restaurant.updatedAt,
     items: restaurant.items.map((item: Item) => ({
       id: item.id,
       name: item.name,
       description: item.description,
-      price: item.price
+      price: item.price,
+      images: item.images,
+      isBlocked: item.isBlocked,
+      createdAt: item.createdAt,
+      updatedAt: item.updatedAt
     }))
   } as RestaurantDTO;
 
-  return <RestaurantPageOrder restaurant={restaurantDTO} />;
+  return (
+    <RestaurantPageOrder
+      isAuthenticated={isAuthenticated}
+      restaurant={restaurantDTO}
+    />
+  );
 };
 
 export default RestaurantPage;

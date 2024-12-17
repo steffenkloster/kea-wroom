@@ -6,25 +6,31 @@ import ChangePasswordTab from "./ChangePasswordTab";
 import SettingsTab from "./SettingsTab";
 import { useSessionContext } from "@/providers/SessionProvider";
 import RestaurantInformationTab from "./RestaurantInformationTab";
+import OrdersTab from "./OrdersTab";
 
 const ProfileTabs = () => {
-  const session = useSessionContext();
+  const sessionContext = useSessionContext();
 
   return (
     <Tabs defaultValue="account" className="w-full">
       <TabsList className="mb-4">
-        <TabsTrigger className="text-xl" value="account">
+        <TabsTrigger className="text-lg" value="account">
           Personal Information
         </TabsTrigger>
-        {session?.role === "RESTAURANT" && (
-          <TabsTrigger className="text-xl" value="restaurant">
+        {sessionContext.session?.role === "RESTAURANT" && (
+          <TabsTrigger className="text-lg" value="restaurant">
             Restaurant Information
           </TabsTrigger>
         )}
-        <TabsTrigger value="password" className="text-xl">
-          Password
+        {sessionContext.session?.role === "CUSTOMER" && (
+          <TabsTrigger className="text-lg" value="orders">
+            Orders
+          </TabsTrigger>
+        )}
+        <TabsTrigger value="password" className="text-lg">
+          Change Password
         </TabsTrigger>
-        <TabsTrigger value="settings" className="text-xl">
+        <TabsTrigger value="settings" className="text-lg">
           Settings
         </TabsTrigger>
       </TabsList>
@@ -36,6 +42,10 @@ const ProfileTabs = () => {
         <TabsContent value="restaurant">
           <h2>Restaurant information</h2>
           <RestaurantInformationTab />
+        </TabsContent>
+        <TabsContent value="orders">
+          <h2>Your orders</h2>
+          <OrdersTab />
         </TabsContent>
         <TabsContent value="password">
           <h2>Change password</h2>

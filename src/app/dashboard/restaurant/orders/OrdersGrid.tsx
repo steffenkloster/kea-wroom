@@ -13,7 +13,6 @@ const OrdersGrid = () => {
     queryFn: async (): Promise<OrderDTO[] | null> => {
       const response = await getOrders();
       if (response) {
-        console.log(response);
         return response.data as OrderDTO[];
       }
 

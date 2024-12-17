@@ -4,9 +4,10 @@ import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { cookies } from "next/headers";
 import { Toaster } from "sonner";
-import SessionProvider from "@/providers/SessionProvider";
+import { SessionProvider } from "@/providers/SessionProvider";
 import ReactQueryProvider from "@/providers/ReactQueryProvider";
 import { getTokenFromCookies } from "@/lib/utils.server";
+import { GoogleMapsProvider } from "@/providers/GoogleMapsProvider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -42,13 +43,15 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <SessionProvider session={token}>
-          <ReactQueryProvider>
-            <Navbar />
-            <main>{children}</main>
-            <footer></footer>
-          </ReactQueryProvider>
-        </SessionProvider>
+        <GoogleMapsProvider>
+          <SessionProvider token={token}>
+            <ReactQueryProvider>
+              <Navbar />
+              <main>{children}</main>
+              <footer></footer>
+            </ReactQueryProvider>
+          </SessionProvider>
+        </GoogleMapsProvider>
         <Toaster closeButton richColors />
       </body>
     </html>

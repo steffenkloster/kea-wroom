@@ -9,6 +9,8 @@ import { handleGetCurrentLocation } from "@/lib/location";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { MapRounded } from "@mui/icons-material";
+import { cn } from "@/lib/utils";
 
 const CustomerDashboard = () => {
   const [location, setLocation] = useState<{
@@ -22,7 +24,6 @@ const CustomerDashboard = () => {
     queryFn: async (): Promise<RestaurantDTO[] | null> => {
       const response = await getAllRestaurants();
       if (response) {
-        console.log(response);
         return response.data as RestaurantDTO[];
       }
 
@@ -34,6 +35,7 @@ const CustomerDashboard = () => {
   const [filteredRestaurants, setFilteredRestaurants] = useState<
     RestaurantDTO[]
   >([]);
+  const [mapHidden, setMapHidden] = useState(true);
 
   useEffect(() => {
     if (data) {
@@ -73,6 +75,10 @@ const CustomerDashboard = () => {
     console.log("Bounds changed:", bounds);
   };
 
+  const handleMapToggle = () => {
+    setMapHidden(!mapHidden);
+  };
+
   const markers = useMemo(() => {
     return filteredRestaurants.map((restaurant) => {
       return {
@@ -87,15 +93,30 @@ const CustomerDashboard = () => {
 
   return (
     <div className="flex h-full w-full">
-      <div className="h-[calc(100vh-80px)]">
-        <section className="w-96 flex-shrink-0 rounded-r-lg bg-primary -mr-1 z-10 shadow-xl drop-shadow-xl h-full overflow-scroll relative">
-          <div className="p-4 sticky top-0 z-10 bg-primary">
+      <div
+        className={cn(
+          "h-[calc(100vh-80px)] w-full sm:w-96",
+          mapHidden ? "" : "!hidden"
+        )}
+      >
+        <section className="sm:w-96 w-full flex-shrink-0 sm:rounded-r-lg bg-primary -mr-1 z-10 shadow-xl drop-shadow-xl h-full overflow-scroll relative">
+          <div className="p-4 sticky top-0 z-10 bg-primary flex gap-3 w-full">
             <Input
               placeholder="Search for restaurants ..."
               value={query}
               className="w-full"
+              fullWidth={true}
               onChange={(e) => setQuery(e.target.value)}
             />
+
+            <Button
+              size={"icon"}
+              variant={"secondary"}
+              className="block sm:hidden flex-shrink-0"
+              onClick={handleMapToggle}
+            >
+              <MapRounded />
+            </Button>
           </div>
           {isLoading ? (
             <div>Loading...</div>
@@ -127,7 +148,12 @@ const CustomerDashboard = () => {
           )}
         </section>
       </div>
-      <div className=" w-full">
+      <div
+        className={cn(
+          "hidden sm:block w-full relative",
+          mapHidden ? "" : "!block"
+        )}
+      >
         <MapComponent
           center={{
             lat: location.latitude,
@@ -135,6 +161,7 @@ const CustomerDashboard = () => {
           }}
           className="h-full w-full"
           onLocationChange={onLocationChange}
+          handleMapToggle={handleMapToggle}
           markers={markers}
         />
       </div>

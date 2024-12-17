@@ -1,13 +1,17 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  webpack(config) {
-    config.module.rules.push({
-      test: /\.svg$/,
-      use: ["@svgr/webpack"]
-    });
-    return config;
+module.exports = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "keawroom.s3.eu-north-1.amazonaws.com",
+        port: "",
+        pathname: "/uploads/**",
+        search: ""
+      },
+      {
+        protocol: "https",
+        hostname: "placehold.co"
+      }
+    ]
   }
 };
-
-export default nextConfig;

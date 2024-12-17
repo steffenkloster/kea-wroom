@@ -39,7 +39,7 @@ const RouteMap: React.FC<RouteMapProps> = ({
   const [directionsResponse, setDirectionsResponse] =
     useState<google.maps.DirectionsResult | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [travelMode, setTravelMode] = useState<string | null>(null);
+  const [travelMode, setTravelMode] = useState<string | null>("BICYCLING");
 
   const [pickUpCoordinates, setPickUpCoordinates] =
     useState<google.maps.LatLng | null>(null);
@@ -67,12 +67,8 @@ const RouteMap: React.FC<RouteMapProps> = ({
       const deliverToCoords = await geocodeAddress(addressDeliverTo);
 
       // Only update state if coordinates are different
-      setPickUpCoordinates((prev) =>
-        pickUpCoords?.equals(prev) ? prev : pickUpCoords
-      );
-      setDeliverToCoordinates((prev) =>
-        deliverToCoords?.equals(prev) ? prev : deliverToCoords
-      );
+      setPickUpCoordinates(pickUpCoords);
+      setDeliverToCoordinates(deliverToCoords);
     };
     fetchCoordinates();
   }, [addressPickUp, addressDeliverTo]);
@@ -118,60 +114,52 @@ const RouteMap: React.FC<RouteMapProps> = ({
   };
 
   return (
-    <LoadScript
-      googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ""}
-    >
-      <div className="relative ">
-        {/* Travel Mode Buttons */}
-        {travelMode && (
-          <div className="absolute top-16 right-2 flex flex-col gap-2 z-10">
-            {["DRIVING", "BICYCLING", "WALKING"].map((mode) => (
-              <Button
-                key={mode}
-                variant={
-                  travelMode ===
-                  google.maps.TravelMode[
-                    mode as keyof typeof google.maps.TravelMode
-                  ]
-                    ? "default"
-                    : "secondary"
-                }
-                onClick={() => setTravelMode(mode)}
-              >
-                {getIcon(mode)}
-              </Button>
-            ))}
-          </div>
+    <div className="relative ">
+      {/* Travel Mode Buttons */}
+      {travelMode && (
+        <div className="absolute top-16 right-2 flex flex-col gap-2 z-10">
+          {["DRIVING", "BICYCLING", "WALKING"].map((mode) => (
+            <Button
+              key={mode}
+              variant={
+                travelMode ===
+                google.maps.TravelMode[
+                  mode as keyof typeof google.maps.TravelMode
+                ]
+                  ? "default"
+                  : "secondary"
+              }
+              onClick={() => setTravelMode(mode)}
+            >
+              {getIcon(mode)}
+            </Button>
+          ))}
+        </div>
+      )}
+
+      {/* Map */}
+      <GoogleMap mapContainerStyle={containerStyle} zoom={7} center={mapCenter}>
+        {travelMode && pickUpCoordinates && deliverToCoordinates && (
+          <DirectionsService
+            options={{
+              origin: pickUpCoordinates,
+              destination: deliverToCoordinates,
+              travelMode:
+                google.maps.TravelMode[
+                  travelMode as keyof typeof google.maps.TravelMode
+                ]
+            }}
+            callback={handleDirectionsCallback}
+          />
         )}
+        {directionsResponse && (
+          <DirectionsRenderer directions={directionsResponse} />
+        )}
+      </GoogleMap>
 
-        {/* Map */}
-        <GoogleMap
-          mapContainerStyle={containerStyle}
-          zoom={7}
-          center={mapCenter}
-        >
-          {travelMode && pickUpCoordinates && deliverToCoordinates && (
-            <DirectionsService
-              options={{
-                origin: pickUpCoordinates,
-                destination: deliverToCoordinates,
-                travelMode:
-                  google.maps.TravelMode[
-                    travelMode as keyof typeof google.maps.TravelMode
-                  ]
-              }}
-              callback={handleDirectionsCallback}
-            />
-          )}
-          {directionsResponse && (
-            <DirectionsRenderer directions={directionsResponse} />
-          )}
-        </GoogleMap>
-
-        {/* Error Handling */}
-        {error && <div className="text-red-600 text-center mt-4">{error}</div>}
-      </div>
-    </LoadScript>
+      {/* Error Handling */}
+      {error && <div className="text-red-600 text-center mt-4">{error}</div>}
+    </div>
   );
 };
 

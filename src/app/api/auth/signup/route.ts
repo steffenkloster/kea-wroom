@@ -127,8 +127,6 @@ export async function POST(req: NextRequest) {
       };
     }
 
-    console.log("Data being passed to prisma.user.create:", newUserData);
-
     const newUser = await prisma.user.create({
       data: newUserData
     });

@@ -135,12 +135,18 @@ export const ItemCard = ({
         </AlertDialog>
 
         <Button
-          asChild
+          asChild={!item.isBlocked}
           variant="default"
           className="w-full"
           disabled={item.isBlocked}
         >
-          <Link href={`/dashboard/restaurant/items/${item.id}`}>Edit item</Link>
+          {item.isBlocked ? (
+            "Edit item"
+          ) : (
+            <Link href={`/dashboard/restaurant/items/${item.id}`}>
+              Edit item
+            </Link>
+          )}
         </Button>
       </div>
     </article>

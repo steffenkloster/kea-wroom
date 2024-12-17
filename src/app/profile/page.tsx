@@ -10,7 +10,7 @@ const ProfilePage = () => {
   return (
     <Section padding="none" className="h-full">
       <div className="bg-secondary text-black py-8 px-4 h-full">
-        <div className="w-full max-w-screen-lg mx-auto">
+        <div className="w-full max-w-screen-md mx-auto">
           <h1 className="mb-3">Your profile</h1>
           <ProfileTabs />
         </div>

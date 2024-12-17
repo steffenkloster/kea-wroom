@@ -33,7 +33,6 @@ const PartnerGrid: React.FC<PartnerGridProps> = ({ userId }) => {
     queryFn: async (): Promise<OrderDTO[] | null> => {
       const response = await getAvailableOrders();
       if (response) {
-        console.log(response);
         return response.data as OrderWithDistance[];
       }
 
@@ -131,7 +130,6 @@ const PartnerGrid: React.FC<PartnerGridProps> = ({ userId }) => {
           return;
         }
 
-        console.log("Calculating distance for order", order);
         const response = await getDistance(
           order.customer.address,
           order.restaurant.address
@@ -186,6 +184,7 @@ const PartnerGrid: React.FC<PartnerGridProps> = ({ userId }) => {
             >
               {getButtonText(activeDelivery.status)}
             </Button>
+
             <RouteMap
               order={activeDelivery}
               distance={activeDelivery.distance || "Calculating..."}

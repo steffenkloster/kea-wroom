@@ -16,7 +16,6 @@ const ItemsGrid = () => {
     queryFn: async (): Promise<UserDTO[] | null> => {
       const response = await adminGetUsers();
       if (response) {
-        console.log(response);
         return response.data as UserDTO[];
       }
 

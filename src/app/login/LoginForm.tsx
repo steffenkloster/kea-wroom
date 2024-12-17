@@ -15,9 +15,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Sync } from "@mui/icons-material";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { loginUser } from "@/lib/api/auth/loginUser";
+import { useSessionContext } from "@/providers/SessionProvider";
+import { JWT } from "next-auth/jwt";
 
 const emailRegex = /^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/;
 const formSchema = z.object({
@@ -43,6 +45,8 @@ const formSchema = z.object({
 const LoginForm = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const { setSession } = useSessionContext();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -70,13 +74,14 @@ const LoginForm = () => {
     }
 
     toast.success("Login successful, redirecting...");
+    setSession(user as JWT);
 
     if (!user.isVerified) {
       router.push("/login/verify");
       return;
     }
 
-    router.push("/dashboard");
+    router.push(searchParams.get("path") || "/dashboard");
   }
 
   return (

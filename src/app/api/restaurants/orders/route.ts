@@ -16,7 +16,8 @@ export async function GET(req: NextRequest) {
 
   const orders = await prisma.order.findMany({
     where: { restaurantId, status: { notIn: ["CANCELED", "COMPLETED"] } },
-    include: { items: { include: { item: true } } }
+    include: { items: { include: { item: true } } },
+    orderBy: { createdAt: "desc" }
   });
 
   return NextResponse.json(

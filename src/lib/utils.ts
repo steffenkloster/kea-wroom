@@ -28,3 +28,24 @@ export function generateRandomString(length: number) {
   }
   return result;
 }
+
+export function getOrderStatusText(status: string) {
+  switch (status) {
+    case "PENDING":
+      return "Pending confirmation";
+    case "ACCEPTED":
+      return "Restaurant accepted the order";
+    case "PREPARING":
+      return "Restaurant is preparing your order";
+    case "READY_FOR_PICKUP":
+      return "Order is ready for pickup by courier";
+    case "IN_TRANSIT":
+      return "Order is being delivered";
+    case "COMPLETED":
+      return "Order delivered!";
+    case "CANCELLED":
+      return "Order cancelled";
+    default:
+      return "Unknown";
+  }
+}
