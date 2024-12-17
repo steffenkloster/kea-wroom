@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 
-export async function GET(request: { params: { id: string } }) {
+export async function GET(_: never, request: { params: { id: string } }) {
   const { id } = request.params;
 
   const restaurant = await prisma.restaurant.findUnique({
