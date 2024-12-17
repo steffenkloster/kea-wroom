@@ -36,7 +36,7 @@ export async function PATCH(
 
   const sanitizedUser = sanitizeUser(updatedUser);
 
-  sendMail(
+  await sendMail(
     updatedUser.email,
     `Your account has been ${updatedUser.isBlocked ? "blocked" : "unblocked"}`,
     `Hello ${updatedUser.firstName}. Your account has been ${

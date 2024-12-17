@@ -131,7 +131,7 @@ export async function POST(req: NextRequest) {
       data: newUserData
     });
 
-    sendMail(
+    await sendMail(
       newUser.email,
       "Verify your email",
       `Your verification token is: ${newUser.verificationToken}`

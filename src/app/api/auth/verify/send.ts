@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
     data: { verificationToken: newVerificationToken }
   });
 
-  sendMail(
+  await sendMail(
     user.email,
     "Verify your email",
     `Your verification token is: ${newVerificationToken}`

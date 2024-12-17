@@ -33,7 +33,7 @@ export async function PATCH(_: never, { params }: { params: { id: string } }) {
     }
   });
 
-  sendMail(
+  await sendMail(
     user.email,
     `One of your items has been ${
       updatedItem.isBlocked ? "blocked" : "unblocked"
