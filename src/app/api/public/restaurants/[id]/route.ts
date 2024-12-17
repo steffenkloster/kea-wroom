@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { NextResponse } from "next/server";
 
 export async function GET(_: never, request: { params: { id: string } }) {
   const { id } = request.params;
@@ -24,11 +25,8 @@ export async function GET(_: never, request: { params: { id: string } }) {
     };
   }
 
-  return {
-    status: 200,
-    body: {
-      message: "Retrieved restaurant successfully",
-      data: restaurant
-    }
-  };
+  return NextResponse.json(
+    { message: "Retrieved restaurant successfully", data: restaurant },
+    { status: 200 }
+  );
 }
