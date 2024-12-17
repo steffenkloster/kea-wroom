@@ -7,10 +7,14 @@ import { useSessionContext } from "../providers/SessionProvider";
 import { toast } from "sonner";
 import { logoutUser } from "@/lib/api/auth/logoutUser";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { CloseRounded, MenuRounded } from "@mui/icons-material";
+import { cn } from "@/lib/utils";
 
 export const Navbar = () => {
   const sessionContext = useSessionContext();
   const router = useRouter();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const logout = async () => {
     await logoutUser();
@@ -64,10 +68,76 @@ export const Navbar = () => {
             <Link href="/">
               <Image src="/logo.svg" alt="Logo" height={50} width={150} />
             </Link>
-            <div className="flex gap-3">{renderButtons()}</div>
+            <div className="gap-3 sm:flex hidden">{renderButtons()}</div>
+            <Button
+              size={"icon"}
+              onClick={() => setMenuOpen(true)}
+              className="sm:hidden"
+            >
+              <MenuRounded />
+            </Button>
           </div>
         </div>
       </nav>
+
+      <div
+        className={cn(
+          "fixed top-0 left-0 h-screen w-screen z-50 bg-white py-5 px-6 flex flex-col opacity-0 pointer-events-none transition-opacity duration-300",
+          menuOpen ? "!opacity-100 !pointer-events-auto" : ""
+        )}
+      >
+        <div className="flex justify-between items-center mb-6">
+          <Image src="/logo.svg" alt="Logo" height={50} width={150} />
+          <Button size={"icon"} onClick={() => setMenuOpen(false)}>
+            <CloseRounded />
+          </Button>
+        </div>
+        {sessionContext.session ? (
+          <>
+            <Link
+              href={`/dashboard/${sessionContext.session.role.toLowerCase()}`}
+              className="w-full text-lg py-3 text-center border-b border-primary"
+              onClick={() => setMenuOpen(false)}
+            >
+              Dashboard
+            </Link>
+            <Link
+              href="/profile"
+              onClick={() => setMenuOpen(false)}
+              className="w-full text-lg py-3 text-center border-b border-primary"
+            >
+              Profile
+            </Link>
+            <Link
+              href="#"
+              onClick={() => {
+                logout();
+                setMenuOpen(false);
+              }}
+              className="w-full text-lg py-3 text-center border-b border-primary"
+            >
+              Log out
+            </Link>
+          </>
+        ) : (
+          <>
+            <Link
+              href="/login"
+              className="w-full text-lg py-3 text-center border-b border-primary"
+              onClick={() => setMenuOpen(false)}
+            >
+              Login
+            </Link>
+            <Link
+              href="/signup"
+              onClick={() => setMenuOpen(false)}
+              className="w-full text-lg py-3 text-center border-b border-primary"
+            >
+              Sign up
+            </Link>
+          </>
+        )}
+      </div>
     </header>
   );
 };
