@@ -1,6 +1,7 @@
 import { NextResponse, NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getUser } from "@/lib/utils.server";
+import sendMail from "@/lib/mail";
 
 export async function POST(req: NextRequest) {
   try {
@@ -66,6 +67,16 @@ export async function POST(req: NextRequest) {
         }
       }
     });
+
+    await sendMail(
+      user.email,
+      `Your order #${order.id}`,
+      `<p>Hi ${
+        user.firstName
+      }! Your order has been placed successfully. This is what you ordered:</p><ul>${order.items
+        .map((item) => `<li>${item.quantity}x ${item.item.name}</li>`)
+        .join("")}</ul><p>Total: $${order.totalPrice}</p>`
+    );
 
     return NextResponse.json(
       {
