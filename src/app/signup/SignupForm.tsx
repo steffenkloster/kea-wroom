@@ -20,6 +20,8 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Role } from "@/types";
 import { createUser } from "@/lib/api/auth/createUser";
+import { useSessionContext } from "@/providers/SessionProvider";
+import { JWT } from "next-auth/jwt";
 
 const emailRegex = /^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/;
 const formSchema = z
@@ -69,6 +71,7 @@ const formSchema = z
 const SignupForm = ({ role = Role.CUSTOMER }: { role?: Role }) => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { setSession } = useSessionContext();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -100,27 +103,15 @@ const SignupForm = ({ role = Role.CUSTOMER }: { role?: Role }) => {
       },
       {
         setLoading
-        // onError: (error) => {
-        //   if (error.statusCode === 409) {
-        //     toast.error(
-        //       "User with this email already exists. If you've forgotten your password, you can reset it."
-        //     );
-        //     return;
-        //   }
-
-        //   if (error.statusCode.toString().startsWith("4")) {
-        //     toast.error(error.error);
-        //     return;
-        //   }
-
-        //   toast.error("An error occurred. Please try again later.");
-        // }
       }
     );
 
     if (!response) {
       return;
     }
+
+    const user = response.data;
+    setSession(user as JWT);
 
     setLoading(true);
     toast.success(
